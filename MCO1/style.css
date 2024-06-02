@@ -1,0 +1,190 @@
+/* General Styles */
+body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #dae0e6;
+}
+
+header {
+    background-color: #ff4500;
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    margin: 10px;
+    font-size: 1.5em;
+}
+
+nav a {
+    color: white;
+    margin-left: 20px;
+    text-decoration: none;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+main {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+section {
+    margin-bottom: 20px;
+}
+
+section h2 {
+    border-bottom: 2px solid #ff4500;
+    padding-bottom: 10px;
+    font-size: 1.2em;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+form label {
+    margin: 10px 0 5px;
+}
+
+form input,
+form select{
+    padding: 10px;
+    border: 0.5px solid #ccc;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    font-size: em;
+   
+}
+form button {
+    padding: 10px;
+    border: 0.5px solid #ccc;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    font-size: em;
+    width: 350px;
+    align-self: auto;
+}
+
+form button {
+    background-color: #1e6bbd;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+form button:hover {
+    background-color: #e03e00;
+}
+
+form input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+#profile-picture {
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    margin-bottom: 20px;
+}
+
+#user-name {
+    font-size: 1.5em;
+    margin: 10px 0;
+}
+
+#user-description {
+    margin-bottom: 20px;
+}
+
+#edit-profile {
+    padding: 10px 20px;
+    background-color: #ff4500;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#edit-profile:hover {
+    background-color: #e03e00;
+}
+
+#user-reservations,
+#search-results {
+    list-style: none;
+    padding: 0;
+}
+
+#user-reservations li,
+#search-results li {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#user-reservations li:last-child,
+#search-results li:last-child {
+    border-bottom: none;
+}
+
+#user-reservations button,
+#search-results button {
+    background-color: #ff4500;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#user-reservations button:hover,
+#search-results button:hover {
+    background-color: #e03e00;
+}
+
+footer {
+    background-color: #ff4500;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    main {
+        padding: 10px;
+    }
+
+    form input,
+    form select,
+    form button {
+        font-size: 0.9em;
+    }
+
+    header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    nav a {
+        margin: 10px 0;
+    }
+}
