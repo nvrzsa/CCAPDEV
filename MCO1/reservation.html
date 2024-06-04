@@ -17,22 +17,22 @@
     </header>
     <main>
         <form id="reservation-form">
-            <label for="lab">Lab:</label>
-            <select id="lab" name="lab" required>
-                <!-- Options will be populated by JavaScript -->
-            </select>
-            
-            <label for="date">Date:</label>
-            <input type="date" id="date" name="date" required>
-            
-            <label for="time">Time:</label>
-            <input type="time" id="time" name="time" required>
-            
-            <label for="anonymous">
-                <input type="checkbox" id="anonymous" name="anonymous"> Reserve anonymously
-            </label>
-            
-            <button type="submit">Reserve</button>
+            <label for="lab">Select Lab:</label>
+        <select id="lab-select" name="lab"></select>
+        <br>
+        <label for="date">Date:</label>
+        <input type="date" id="date" name="date" required>
+        <br>
+        <label for="time">Time:</label>
+        <input type="time" id="time" name="time" required>
+        <br>
+        <label for="anonymous">
+            <input type="checkbox" id="anonymous" name="anonymous"> Reserve anonymously
+        </label>
+    
+        <br>
+        <button type="submit">Reserve</button>
+    </form>
         </form>
     </main>
     <script src="script.js"></script>
