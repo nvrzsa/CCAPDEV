@@ -11,6 +11,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const userReservations = document.getElementById('user-reservations');
     const availabilityDiv = document.getElementById('availability');
     const searchResults = document.getElementById('search-results');
+    const editProfileButton = document.getElementById('edit-profile');
+    const editProfileSection = document.getElementById('edit-profile-section');
+    const cancelEditButton = document.getElementById('cancel-edit');
 
     // Initial Data
     const initialUsers = [
@@ -70,7 +73,60 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Event Listeners
+    // Show the edit profile form when "Edit Profile" button is clicked
+    if (editProfileButton) {
+        editProfileButton.addEventListener('click', function () {
+            editProfileSection.style.display = 'block';
+        });
+    }
+
+    // Hide the edit profile form when "Cancel" button is clicked
+    if (cancelEditButton) {
+        cancelEditButton.addEventListener('click', function () {
+
+            editProfileSection.style.display = 'none';
+        });
+    }
+
+    // Handle form submission (for saving changes)
+    const editProfileForm = document.getElementById('edit-profile-form');
+    if (editProfileForm) {
+        editProfileForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            
+            const newProfilePictureInput = document.getElementById('new-profile-picture');
+            const newUserNameInput = document.getElementById('new-user-name');
+            const newUserDescriptionInput = document.getElementById('new-user-description');
+
+            // Update profile picture if a new one is provided
+            if (newProfilePictureInput.files.length > 0) {
+                const reader = new FileReader();
+                reader.onload = function (event) {
+                    currentUser.profile.picture = event.target.result;
+                    document.getElementById('profile-picture').src = event.target.result;
+                    saveData();
+                };
+                reader.readAsDataURL(newProfilePictureInput.files[0]);
+            }
+
+            // Update username if a new one is provided
+            if (newUserNameInput.value.trim() !== '') {
+                currentUser.email = newUserNameInput.value.trim();
+                document.getElementById('user-name').textContent = currentUser.email;
+            }
+
+            // Update description if a new one is provided
+            if (newUserDescriptionInput.value.trim() !== '') {
+                currentUser.profile.description = newUserDescriptionInput.value.trim();
+                document.getElementById('user-description').textContent = currentUser.profile.description;
+            }
+
+            saveData();
+            editProfileSection.style.display = 'none';  // Hide the form after saving
+        });
+    }
+
+    // Event Listeners for other forms
     if (loginForm) {
         loginForm.addEventListener('submit', function (e) {
             e.preventDefault();
@@ -151,6 +207,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // Load current user data
     if (currentUser) {
         if (profilePicture) profilePicture.src = currentUser.profile.picture;
         if (userName) userName.textContent = currentUser.email;
