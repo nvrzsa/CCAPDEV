@@ -12,6 +12,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const availabilityDiv = document.getElementById('availability');
     const searchResults = document.getElementById('search-results');
 
+    // newly added elements by nathan
+    const seatSelect = document.getElementById('seat');
+    const labFormSelect = document.getElementById('lab');
+    
+
     // Initial Data
     const initialUsers = [
         { id: 1, email: 'student1@dlsu.edu', password: 'password1', role: 'student', profile: { picture: 'images/default-profile.png', description: 'Student 1' }, reservations: [] },
@@ -42,16 +47,32 @@ document.addEventListener('DOMContentLoaded', function () {
         localStorage.setItem('currentUser', JSON.stringify(currentUser));
     }
 
-    // Load Labs into Select
+    // Load Labs into Select Element
     function loadLabs() {
-        if (labSelect) {
-            labSelect.innerHTML = '';
-            labs.forEach(lab => {
+        [labSelect, labFormSelect].forEach(selectElement => {
+            if (selectElement) {
+                selectElement.innerHTML = '';
+                labs.forEach(lab => {
+                    const option = document.createElement('option');
+                    option.value = lab.id;
+                    option.textContent = lab.name;
+                    selectElement.appendChild(option);
+                });
+            }
+        });
+    }
+
+    // Load Seats into Seat Select Element
+    function loadSeats(labId) {
+        if (seatSelect) {
+            seatSelect.innerHTML = '';
+            const lab = labs.find(l => l.id == labId);
+            for (let i = 1; i <= lab.seats; i++) {
                 const option = document.createElement('option');
-                option.value = lab.id;
-                option.textContent = lab.name;
-                labSelect.appendChild(option);
-            });
+                option.value = i;
+                option.textContent = `Seat ${i}`;
+                seatSelect.appendChild(option);
+            }
         }
     }
 
@@ -119,6 +140,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const date = reservationForm.date.value;
             const time = reservationForm.time.value;
             const anonymous = reservationForm.anonymous.checked;
+            const seatNumber = parseInt(document.getElementById('seat').value);
 
             const reservation = {
                 id: Date.now(),
@@ -167,15 +189,18 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    if (labSelect) {
+        labSelect.addEventListener('change', function () {
+            const selectedLabId = parseInt(labSelect.value);
+            displayAvailability(selectedLabId);
+            loadSeats(selectedLabId); // Load seats for the selected lab
+        });
+    }
+
     // Initial Data Load
     loadLabs();
     if (labSelect) {
-        labSelect.addEventListener('change', function () {
-            displayAvailability(labSelect.value);
-        });
-    }
-    if (labSelect) {
-        displayAvailability(labSelect.value);
+        displayAvailability(parseInt(labSelect.value));
     }
 
     // Save initial data if it doesn't exist
