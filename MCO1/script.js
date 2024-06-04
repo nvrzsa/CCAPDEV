@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // newly added elements by nathan
     const seatSelect = document.getElementById('seat');
     const labFormSelect = document.getElementById('lab');
+    const deleteAccountButton = document.getElementById('delete-account');
     
 
     // Initial Data
@@ -74,6 +75,21 @@ document.addEventListener('DOMContentLoaded', function () {
                 seatSelect.appendChild(option);
             }
         }
+    }
+
+    // Function to delete the user's account
+    function deleteUserAccount() {
+        // Remove the user from the list of users
+        users = users.filter(user => user.id !== currentUser.id);
+
+        // Cancel any reservations associated with the user
+        reservations = reservations.filter(reservation => reservation.userId !== currentUser.id);
+
+        // Update local storage
+        saveData();
+
+        alert('Your account has been successfully deleted.');
+        window.location.href = 'index.html'; // Redirect to the homepage
     }
 
     // Display Availability for Selected Lab
@@ -194,6 +210,19 @@ document.addEventListener('DOMContentLoaded', function () {
             const selectedLabId = parseInt(labSelect.value);
             displayAvailability(selectedLabId);
             loadSeats(selectedLabId); // Load seats for the selected lab
+        });
+    }
+
+    // Event listener for the delete account button
+    if (deleteAccountButton) {
+        deleteAccountButton.addEventListener('click', function() {
+            // Show confirmation prompt
+            const confirmDelete = confirm('Are you sure you want to delete your account? This action cannot be undone.');
+
+            // If user confirms deletion, call deleteUserAccount function
+            if (confirmDelete) {
+                deleteUserAccount();
+            }
         });
     }
 
