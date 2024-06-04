@@ -28,6 +28,23 @@
                 <!-- Reservations will be populated by JavaScript -->
             </ul>
         </section>
+        <!-- Edit Profile Section -->
+        <section id="edit-profile-section" style="display:none;">
+            <h2>Edit Profile</h2>
+            <form id="edit-profile-form">
+                <label for="new-profile-picture">Profile Picture:</label>
+                <input type="file" id="new-profile-picture" name="new-profile-picture">
+                
+                <label for="new-user-name">User Name:</label>
+                <input type="text" id="new-user-name" name="new-user-name">
+                
+                <label for="new-user-description">User Description:</label>
+                <input type="text" id="new-user-description" name="new-user-description">
+                
+                <button type="submit">Save Changes</button>
+                <button type="button" id="cancel-edit">Cancel</button>
+            </form>
+        </section>
     </main>
     <script src="script.js"></script>
 </body>
