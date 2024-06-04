@@ -98,6 +98,12 @@ section h2 {
     font-size: 1.2em;
 }
 
+section h3 {
+    border-top: 2px solid #ff4500;
+    padding-top: 10px;
+    font-size: 1.2em;
+}
+
 form {
     display: flex;
     flex-direction: column;
