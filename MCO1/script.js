@@ -16,8 +16,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const seatSelect = document.getElementById('seat');
     const labFormSelect = document.getElementById('lab');
     const deleteAccountButton = document.getElementById('delete-account');
+    const logoutButton = document.getElementById('logout-button');
     
-
     // Initial Data
     const initialUsers = [
         { id: 1, email: 'student1@dlsu.edu', password: 'password1', role: 'student', profile: { picture: 'images/default-profile.png', description: 'Student 1' }, reservations: [] },
@@ -46,6 +46,15 @@ document.addEventListener('DOMContentLoaded', function () {
         localStorage.setItem('users', JSON.stringify(users));
         localStorage.setItem('reservations', JSON.stringify(reservations));
         localStorage.setItem('currentUser', JSON.stringify(currentUser));
+    }
+
+    // Logout Function
+    function logout() {
+        // Clear session-related data
+        localStorage.removeItem('currentUser');
+        currentUser = null;
+        // Redirect to the login page
+        window.location.href = 'login.html';
     }
 
     // Load Labs into Select Element
@@ -108,6 +117,13 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Event Listeners
+    
+    if (logoutButton) {
+        logoutButton.addEventListener('click', function () {
+            logout();
+        });
+    }
+
     if (loginForm) {
         loginForm.addEventListener('submit', function (e) {
             e.preventDefault();
