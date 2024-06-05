@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const editProfileButton = document.getElementById('edit-profile');
     const editProfileSection = document.getElementById('edit-profile-section');
     const cancelEditButton = document.getElementById('cancel-edit');
+    const dropDownButton = document.getElementById('dropDown-Button');
 
     // newly added elements by nathan
     const seatSelect = document.getElementById('seat');
@@ -123,6 +124,28 @@ document.addEventListener('DOMContentLoaded', function () {
 
             editProfileSection.style.display = 'none';
         });
+    }
+
+            /* When the user clicks on the button,
+    toggle between hiding and showing the dropdown content */
+    if (dropDownButton) {
+        dropDownButton.addEventListener('click', function () {
+            document.getElementById("myDropdown").classList.toggle("show");
+        });
+      }
+
+    // Close the dropdown if the user clicks outside of it
+    window.onclick = function(event) {
+        if (!event.target.matches('.dropbtn')) {
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            var i;
+            for (i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
+            }
+        }
     }
 
     // Handle form submission (for saving changes)
