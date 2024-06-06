@@ -11,25 +11,13 @@ document.addEventListener('DOMContentLoaded', function () {
     const userReservations = document.getElementById('user-reservations');
     const availabilityDiv = document.getElementById('availability');
     const searchResults = document.getElementById('search-results');
-    const editProfileButton = document.getElementById('edit-profile');
-    const editProfileSection = document.getElementById('edit-profile-section');
-    const cancelEditButton = document.getElementById('cancel-edit');
-    const dropDownButton = document.getElementById('dropDown-Button');
-    const dropdownContent = document.getElementById('myDropdown');
-    const userModal = document.getElementById('user-modal');
-    const modalProfilePicture = document.getElementById('modal-profile-picture');
-    const modalUserName = document.getElementById('modal-user-name');
-    const modalUserEmail = document.getElementById('modal-user-email');
-    const modalUserId = document.getElementById('modal-user-id');
-    const modalUserRole = document.getElementById('modal-user-role');
-    const modalUserReservations = document.getElementById('modal-user-reservations');
 
     // newly added elements by nathan
     const seatSelect = document.getElementById('seat');
     const labFormSelect = document.getElementById('lab');
     const deleteAccountButton = document.getElementById('delete-account');
+    const logoutButton = document.getElementById('logout-button');
     
-
     // Initial Data
     const initialUsers = [
         { id: 1, email: 'student1@dlsu.edu', password: 'password1', role: 'student', profile: { picture: 'images/default-profile.png', description: 'Student 1' }, reservations: [] },
@@ -50,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Load Data from Local Storage or Initialize
     let users = JSON.parse(localStorage.getItem('users')) || initialUsers;
-    let reservations = JSON.parse(localStorage.getItem('reservations')) || [];
+    let reservations = JSON.parse(localStorage.getItem('reservations')) || initialReservations;
     let currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
     // Save Data to Local Storage
@@ -58,6 +46,15 @@ document.addEventListener('DOMContentLoaded', function () {
         localStorage.setItem('users', JSON.stringify(users));
         localStorage.setItem('reservations', JSON.stringify(reservations));
         localStorage.setItem('currentUser', JSON.stringify(currentUser));
+    }
+
+    // Logout Function
+    function logout() {
+        // Clear session-related data
+        localStorage.removeItem('currentUser');
+        currentUser = null;
+        // Redirect to the login page
+        window.location.href = 'login.html';
     }
 
     // Load Labs into Select Element
@@ -87,22 +84,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 seatSelect.appendChild(option);
             }
         }
-    }
-
-    // Function to populate the modal with user information
-    function populateModal(user) {
-        modalProfilePicture.src = user.profile.picture;
-        modalUserName.textContent = user.profile.description;
-        modalUserEmail.textContent = user.email;
-        modalUserId.textContent = user.id;
-        modalUserRole.textContent = user.role;
-        modalUserReservations.innerHTML = '';
-        user.reservations.forEach(reservation => {
-            const li = document.createElement('li');
-            li.textContent = `Lab: ${labs.find(l => l.id == reservation.labId).name}, Seat: ${reservation.seatNumber}, Date: ${reservation.date}, Time: ${reservation.time}`;
-            modalUserReservations.appendChild(li);
-        });
-        userModal.style.display = 'block';
     }
 
     // Function to delete the user's account
@@ -135,114 +116,14 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Show the edit profile form when "Edit Profile" button is clicked
-    if (editProfileButton) {
-        editProfileButton.addEventListener('click', function () {
-            editProfileSection.style.display = 'block';
-        });
-    }
-
-    // Hide the edit profile form when "Cancel" button is clicked
-    if (cancelEditButton) {
-        cancelEditButton.addEventListener('click', function () {
-
-            editProfileSection.style.display = 'none';
-        });
-    }
-
-    // Load Users into Dropdown
-    function populateDropdown(users) {
-        dropdownContent.innerHTML = '';
-        users.forEach(user => {
-            const link = document.createElement('a');
-            link.href = '#';
-            link.textContent = user.email;
-            dropdownContent.appendChild(link);
-        });
-    }
-    if (dropDownButton) {
-        dropDownButton.addEventListener('click', function() {
-            dropdownContent.classList.toggle('show');
-        });
-    }
-
-    // Select a user from the dropdown
-    function selectUser(user) {
-        currentUser = user;
-        saveData();
-        window.location.href = 'profile.html'; // Redirect to the selected user's profile page
-    }
-
-    dropdownContent.addEventListener('click', function (event) {
-        console.log('Clicked on dropdown content');
-        if (event.target.tagName === 'A') {
-            const userEmail = event.target.textContent;
-            console.log('Clicked user email:', userEmail);
-            const user = initialUsers.find(u => u.email === userEmail);
-            console.log('Found user:', user);
-            if (user) {
-                populateModal(user);
-            }
-        }
-    });
+    // Event Listeners
     
-
-    // Event listener to close the modal when the close button is clicked
-    const closeModalButton = document.getElementsByClassName('close')[0];
-    closeModalButton.addEventListener('click', function () {
-        userModal.style.display = 'none';
-    });
-
-    // Close the dropdown if the user clicks outside of it
-    window.onclick = function(event) {
-        if (!event.target.matches('.dropbtn')) {
-            if (dropdownContent.classList.contains('show')) {
-                dropdownContent.classList.remove('show');
-            }
-        }
-    }
-
-    populateDropdown(initialUsers);
-
-    // Handle form submission (for saving changes)
-    const editProfileForm = document.getElementById('edit-profile-form');
-    if (editProfileForm) {
-        editProfileForm.addEventListener('submit', function (e) {
-            e.preventDefault();
-            
-            const newProfilePictureInput = document.getElementById('new-profile-picture');
-            const newUserNameInput = document.getElementById('new-user-name');
-            const newUserDescriptionInput = document.getElementById('new-user-description');
-
-            // Update profile picture if a new one is provided
-            if (newProfilePictureInput.files.length > 0) {
-                const reader = new FileReader();
-                reader.onload = function (event) {
-                    currentUser.profile.picture = event.target.result;
-                    document.getElementById('profile-picture').src = event.target.result;
-                    saveData();
-                };
-                reader.readAsDataURL(newProfilePictureInput.files[0]);
-            }
-
-            // Update username if a new one is provided
-            if (newUserNameInput.value.trim() !== '') {
-                currentUser.email = newUserNameInput.value.trim();
-                document.getElementById('user-name').textContent = currentUser.email;
-            }
-
-            // Update description if a new one is provided
-            if (newUserDescriptionInput.value.trim() !== '') {
-                currentUser.profile.description = newUserDescriptionInput.value.trim();
-                document.getElementById('user-description').textContent = currentUser.profile.description;
-            }
-
-            saveData();
-            editProfileSection.style.display = 'none';  // Hide the form after saving
+    if (logoutButton) {
+        logoutButton.addEventListener('click', function () {
+            logout();
         });
     }
 
-    // Event Listeners for other forms
     if (loginForm) {
         loginForm.addEventListener('submit', function (e) {
             e.preventDefault();
@@ -324,7 +205,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Load current user data
     if (currentUser) {
         if (profilePicture) profilePicture.src = currentUser.profile.picture;
         if (userName) userName.textContent = currentUser.email;
