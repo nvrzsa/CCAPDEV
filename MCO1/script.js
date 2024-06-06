@@ -11,6 +11,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const userReservations = document.getElementById('user-reservations');
     const availabilityDiv = document.getElementById('availability');
     const searchResults = document.getElementById('search-results');
+    const editProfileButton = document.getElementById('edit-profile');
+    const editProfileSection = document.getElementById('edit-profile-section');
+    const cancelEditButton = document.getElementById('cancel-edit');
+    const dropDownButton = document.getElementById('dropDown-Button');
 
     // newly added elements by nathan
     const seatSelect = document.getElementById('seat');
@@ -124,6 +128,82 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // Show the edit profile form when "Edit Profile" button is clicked
+    if (editProfileButton) {
+        editProfileButton.addEventListener('click', function () {
+            editProfileSection.style.display = 'block';
+        });
+    }
+
+    // Hide the edit profile form when "Cancel" button is clicked
+    if (cancelEditButton) {
+        cancelEditButton.addEventListener('click', function () {
+
+            editProfileSection.style.display = 'none';
+        });
+    }
+
+            /* When the user clicks on the button,
+    toggle between hiding and showing the dropdown content */
+    if (dropDownButton) {
+        dropDownButton.addEventListener('click', function () {
+            document.getElementById("myDropdown").classList.toggle("show");
+        });
+      }
+
+    // Close the dropdown if the user clicks outside of it
+    window.onclick = function(event) {
+        if (!event.target.matches('.dropbtn')) {
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            var i;
+            for (i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
+            }
+        }
+    }
+
+    // Handle form submission (for saving changes)
+    const editProfileForm = document.getElementById('edit-profile-form');
+    if (editProfileForm) {
+        editProfileForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            
+            const newProfilePictureInput = document.getElementById('new-profile-picture');
+            const newUserNameInput = document.getElementById('new-user-name');
+            const newUserDescriptionInput = document.getElementById('new-user-description');
+
+            // Update profile picture if a new one is provided
+            if (newProfilePictureInput.files.length > 0) {
+                const reader = new FileReader();
+                reader.onload = function (event) {
+                    currentUser.profile.picture = event.target.result;
+                    document.getElementById('profile-picture').src = event.target.result;
+                    saveData();
+                };
+                reader.readAsDataURL(newProfilePictureInput.files[0]);
+            }
+
+            // Update username if a new one is provided
+            if (newUserNameInput.value.trim() !== '') {
+                currentUser.email = newUserNameInput.value.trim();
+                document.getElementById('user-name').textContent = currentUser.email;
+            }
+
+            // Update description if a new one is provided
+            if (newUserDescriptionInput.value.trim() !== '') {
+                currentUser.profile.description = newUserDescriptionInput.value.trim();
+                document.getElementById('user-description').textContent = currentUser.profile.description;
+            }
+
+            saveData();
+            editProfileSection.style.display = 'none';  // Hide the form after saving
+        });
+    }
+
+    // Event Listeners for other forms
     if (loginForm) {
         loginForm.addEventListener('submit', function (e) {
             e.preventDefault();
@@ -254,5 +334,37 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     if (!localStorage.getItem('reservations')) {
         localStorage.setItem('reservations', JSON.stringify(initialReservations));
+    }
+
+    //new add by kian
+
+    // Function to populate dropdown with available user emails
+    function populateDropdown() {
+        const dropdownContent = document.getElementById('myDropdown');
+        if (dropdownContent) {
+            dropdownContent.innerHTML = ''; // Clear existing dropdown items
+
+            // Filter available users (for demonstration, let's assume available users are those with non-empty descriptions)
+            const availableUsers = users.filter(user => user.profile.description.trim() !== '');
+
+            availableUsers.forEach(user => {
+                const a = document.createElement('a');
+                a.href = '#'; // You can set the appropriate href if needed
+                a.textContent = user.email;
+                dropdownContent.appendChild(a);
+            });
+        }
+    }
+
+    populateDropdown();
+
+    // Event listener for lab selection change, you can call populateDropdown here or as needed
+    if (labSelect) {
+        labSelect.addEventListener('change', function () {
+            const selectedLabId = parseInt(labSelect.value);
+            displayAvailability(selectedLabId);
+            loadSeats(selectedLabId); // Load seats for the selected lab
+            populateDropdown(); // Update dropdown based on selected lab or any other criteria
+        });
     }
 });
