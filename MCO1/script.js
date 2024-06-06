@@ -15,14 +15,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const editProfileSection = document.getElementById('edit-profile-section');
     const cancelEditButton = document.getElementById('cancel-edit');
     const dropDownButton = document.getElementById('dropDown-Button');
-    const dropdownContent = document.getElementById('myDropdown');
-    const userModal = document.getElementById('user-modal');
-    const modalProfilePicture = document.getElementById('modal-profile-picture');
-    const modalUserName = document.getElementById('modal-user-name');
-    const modalUserEmail = document.getElementById('modal-user-email');
-    const modalUserId = document.getElementById('modal-user-id');
-    const modalUserRole = document.getElementById('modal-user-role');
-    const modalUserReservations = document.getElementById('modal-user-reservations');
 
     // newly added elements by nathan
     const seatSelect = document.getElementById('seat');
@@ -50,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Load Data from Local Storage or Initialize
     let users = JSON.parse(localStorage.getItem('users')) || initialUsers;
-    let reservations = JSON.parse(localStorage.getItem('reservations')) || [];
+    let reservations = JSON.parse(localStorage.getItem('reservations')) || initialReservations;
     let currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
     // Save Data to Local Storage
@@ -87,22 +79,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 seatSelect.appendChild(option);
             }
         }
-    }
-
-    // Function to populate the modal with user information
-    function populateModal(user) {
-        modalProfilePicture.src = user.profile.picture;
-        modalUserName.textContent = user.profile.description;
-        modalUserEmail.textContent = user.email;
-        modalUserId.textContent = user.id;
-        modalUserRole.textContent = user.role;
-        modalUserReservations.innerHTML = '';
-        user.reservations.forEach(reservation => {
-            const li = document.createElement('li');
-            li.textContent = `Lab: ${labs.find(l => l.id == reservation.labId).name}, Seat: ${reservation.seatNumber}, Date: ${reservation.date}, Time: ${reservation.time}`;
-            modalUserReservations.appendChild(li);
-        });
-        userModal.style.display = 'block';
     }
 
     // Function to delete the user's account
@@ -150,59 +126,27 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Load Users into Dropdown
-    function populateDropdown(users) {
-        dropdownContent.innerHTML = '';
-        users.forEach(user => {
-            const link = document.createElement('a');
-            link.href = '#';
-            link.textContent = user.email;
-            dropdownContent.appendChild(link);
-        });
-    }
+            /* When the user clicks on the button,
+    toggle between hiding and showing the dropdown content */
     if (dropDownButton) {
-        dropDownButton.addEventListener('click', function() {
-            dropdownContent.classList.toggle('show');
+        dropDownButton.addEventListener('click', function () {
+            document.getElementById("myDropdown").classList.toggle("show");
         });
-    }
-
-    // Select a user from the dropdown
-    function selectUser(user) {
-        currentUser = user;
-        saveData();
-        window.location.href = 'profile.html'; // Redirect to the selected user's profile page
-    }
-
-    dropdownContent.addEventListener('click', function (event) {
-        console.log('Clicked on dropdown content');
-        if (event.target.tagName === 'A') {
-            const userEmail = event.target.textContent;
-            console.log('Clicked user email:', userEmail);
-            const user = initialUsers.find(u => u.email === userEmail);
-            console.log('Found user:', user);
-            if (user) {
-                populateModal(user);
-            }
-        }
-    });
-    
-
-    // Event listener to close the modal when the close button is clicked
-    const closeModalButton = document.getElementsByClassName('close')[0];
-    closeModalButton.addEventListener('click', function () {
-        userModal.style.display = 'none';
-    });
+      }
 
     // Close the dropdown if the user clicks outside of it
     window.onclick = function(event) {
         if (!event.target.matches('.dropbtn')) {
-            if (dropdownContent.classList.contains('show')) {
-                dropdownContent.classList.remove('show');
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            var i;
+            for (i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
             }
         }
     }
-
-    populateDropdown(initialUsers);
 
     // Handle form submission (for saving changes)
     const editProfileForm = document.getElementById('edit-profile-form');
@@ -374,5 +318,37 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     if (!localStorage.getItem('reservations')) {
         localStorage.setItem('reservations', JSON.stringify(initialReservations));
+    }
+
+    //new add by kian
+
+    // Function to populate dropdown with available user emails
+    function populateDropdown() {
+        const dropdownContent = document.getElementById('myDropdown');
+        if (dropdownContent) {
+            dropdownContent.innerHTML = ''; // Clear existing dropdown items
+
+            // Filter available users (for demonstration, let's assume available users are those with non-empty descriptions)
+            const availableUsers = users.filter(user => user.profile.description.trim() !== '');
+
+            availableUsers.forEach(user => {
+                const a = document.createElement('a');
+                a.href = '#'; // You can set the appropriate href if needed
+                a.textContent = user.email;
+                dropdownContent.appendChild(a);
+            });
+        }
+    }
+
+    populateDropdown();
+
+    // Event listener for lab selection change, you can call populateDropdown here or as needed
+    if (labSelect) {
+        labSelect.addEventListener('change', function () {
+            const selectedLabId = parseInt(labSelect.value);
+            displayAvailability(selectedLabId);
+            loadSeats(selectedLabId); // Load seats for the selected lab
+            populateDropdown(); // Update dropdown based on selected lab or any other criteria
+        });
     }
 });
