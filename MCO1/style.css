@@ -98,6 +98,12 @@ section h2 {
     font-size: 1.2em;
 }
 
+section h3 {
+    border-top: 2px solid #ff4500;
+    padding-top: 10px;
+    font-size: 1.2em;
+}
+
 form {
     display: flex;
     flex-direction: column;
@@ -143,11 +149,11 @@ form input[type="checkbox"] {
 }
 
 #profile-picture {
-    border-radius: 50%;
-    width: 150px;
-    height: 150px;
+    border-radius: 70%;
+    width: 100px;
+    height: 100px;
     object-fit: cover;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 #user-name {
@@ -226,6 +232,50 @@ form input[type="checkbox"] {
 #search-results button:hover {
     background-color: #e03e00;
 }
+
+.dropbtn {
+    background-color: #ff4500;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+  .dropbtn:hover, .dropbtn:focus {
+    background-color: #e03e00;
+  }
+  
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    overflow: auto;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+  }
+  
+  .dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+  }
+  
+  .dropdown a:hover {background-color: #ddd;}
+  
+  .show {display: block;}
 
 footer {
     background-color: #ff4500;
