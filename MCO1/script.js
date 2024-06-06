@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Initial Data
     const initialUsers = [
         { id: 1, email: 'student1@dlsu.edu', password: 'password1', role: 'student', profile: { picture: 'images/default-profile.png', description: 'Student 1' }, reservations: [] },
-        { id: 2, email: 'student2@dlsu.edu', password: 'password2', role: 'student', profile: { picture: 'images/default-profile.png', description: 'Student 2' }, reservations: [] },
+        { id: 2, email: 'student2@dlsu.edu', password: 'password2', role: 'student', profile: { picture: 'images/default-profile2.jpeg', description: 'Student 2' }, reservations: [] },
         { id: 3, email: 'technician1@dlsu.edu', password: 'password3', role: 'technician', profile: { picture: 'images/default-profile.png', description: 'Technician 1' }, reservations: [] }
     ];
 
@@ -156,7 +156,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (users.find(u => u.email === email)) {
                 alert('User already exists');
             } else {
-                const newUser = { id: Date.now(), email, password, role, profile: { picture: 'images/default-profile.png', description: '' }, reservations: [] };
+                const newUser = { id: Date.now(), email, password, role, profile: { picture: 'images/default-profile.png', description: 'New user' }, reservations: [] };
                 users.push(newUser);
                 saveData();
                 alert('Registration successful');

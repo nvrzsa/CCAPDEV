@@ -16,15 +16,19 @@
         </nav>
     </header>
     <main>
-
-        <!-- User's profile -->
         <section>
-            <img src="images/default-profile.png" alt="Profile Picture" id="profile-picture">
+            <img src="images/default-profile.jpeg" alt="Profile Picture" id="profile-picture">
             <h2 id="user-name">User Name</h2>
             <p id="user-description">User description...</p>
             <button id="edit-profile">Edit Profile</button>
         </section>
 
+        <section>
+            <h2>Your Reservations</h2>
+            <ul id="user-reservations">
+                <!-- Reservations will be populated by JavaScript -->
+            </ul>
+        </section>
         <!-- Edit Profile Section -->
         <section id="edit-profile-section" style="display:none;">
             <h2>Edit Profile</h2>
@@ -42,47 +46,6 @@
                 <button type="button" id="cancel-edit">Cancel</button>
             </form>
         </section>
-
-        <!-- Search Users -->
-        <section>
-            <h2>Find Other Users</h2>
-            <div class="dropdown">
-                <button id="dropDown-Button" class="dropbtn">Dropdown</button>
-                <div id="myDropdown" class="dropdown-content">
-                    <!-- Users will be populated by JavaScript -->
-                </div>
-            </div>
-        </section>
-
-        <div id="user-modal" class="modal">
-            <div class="modal-content">
-              <span class="close">&times;</span>
-              <img id="modal-profile-picture" src="" alt="Profile Picture">
-              <section>              
-                <h2 id="modal-user-name"></h2>
-              </section>
-              <p>Email: <span id="modal-user-email"></span></p>
-              <p>ID: <span id="modal-user-id"></span></p>
-              <p>Role: <span id="modal-user-role"></span></p>
-              <section>
-                <h2>Reservations</h2>
-              </section>
-              <ul id="modal-user-reservations"></ul>
-            </div>
-          </div>
-
-        <section>
-            <h2>Your Reservations</h2>
-            <ul id="user-reservations">
-                <!-- Reservations will be populated by JavaScript -->
-            </ul>
-        </section>
-
-        <section>
-            <h3> Account Management </h3>
-            <button id="delete-account" class="profile-button">Delete My Account</button>
-        </section>
-
     </main>
     <script src="script.js"></script>
 </body>
