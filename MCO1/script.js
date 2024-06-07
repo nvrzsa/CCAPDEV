@@ -120,8 +120,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-<<<<<<< Updated upstream
-=======
     // Load user reservations
     function loadUserReservations() {
         if (userReservations) {
@@ -239,7 +237,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Event Listeners for other forms
->>>>>>> Stashed changes
     if (loginForm) {
         loginForm.addEventListener('submit', function (e) {
             e.preventDefault();
