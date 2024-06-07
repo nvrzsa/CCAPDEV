@@ -114,15 +114,14 @@ form label {
 }
 
 form input,
-form select {
+form select{
     padding: 10px;
     border: 0.5px solid #ccc;
     border-radius: 8px;
     margin-bottom: 10px;
     font-size: em;
-
+   
 }
-
 form button {
     padding: 10px;
     border: 0.5px solid #ccc;
@@ -177,20 +176,6 @@ form input[type="checkbox"] {
 
 #edit-profile:hover {
     background-color: #e03e00;
-}
-
-#check-available-slots-btn {
-    margin-left: 2vw;
-    background-color: #ff4500;
-    color: white;
-    cursor: pointer;
-}
-
-#lab-availability-dv1 p, #lab-availability-dv2 p, #lab-availability-dv3 p{
-    margin-left: 3vw;
-}
-#lab-availability-dv1 h4, #lab-availability-dv2 h4, #lab-availability-dv3 h4{
-    font-size: large;
 }
 
 .profile-button {
@@ -367,6 +352,8 @@ footer {
     padding: 10px;
     border-bottom: 1px solid #ccc;
 }
+
+
 
 @media (max-width: 768px) {
     main {

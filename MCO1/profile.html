@@ -16,7 +16,6 @@
         </nav>
     </header>
     <main>
-        
         <!-- User's profile -->
         <section>
             <img src="images/default-profile.jpeg" alt="Profile Picture" id="profile-picture">
@@ -25,7 +24,6 @@
             <button id="edit-profile">Edit Profile</button>
         </section>
 
-        </section>
         <!-- Edit Profile Section -->
         <section id="edit-profile-section" style="display:none;">
             <h2>Edit Profile</h2>
@@ -61,6 +59,9 @@
             </ul>
             <!-- Technician specific content -->
             <div id="technician-dropdown" style="display:none;">
+                <select id="student-email-dropdown">
+                    <!-- Student emails will be populated here by JavaScript -->
+                </select>
                 <button id="make-reservation" class="profile-button">Make Reservation</button>
             </div>
         </section>
@@ -70,6 +71,7 @@
             <button id="delete-account" class="profile-button">Delete My Account</button>
         </section>
     </main>
+    
     <!-- User Info Modal -->
     <div id="user-info-modal" class="modal">
         <div class="modal-content">
