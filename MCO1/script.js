@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const labFormSelect = document.getElementById('lab');
     const deleteAccountButton = document.getElementById('delete-account');
 
-    // newly added elements by kain
+    // kian update 2.0
     const modal = document.getElementById('user-info-modal');
     const modalClose = document.querySelector('.modal .close');
     const modalProfilePicture = document.getElementById('modal-profile-picture');
@@ -30,6 +30,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const modalUserReservations = document.getElementById('modal-user-reservations');
     const submitEditButton = document.getElementById('submit-edit');
     const logoutButton = document.getElementById('logout-button');
+
+    // kian update 3.0
+    const studentEmailDropdown = document.getElementById('student-email-dropdown');
+    const technicianDropdown = document.getElementById('technician-dropdown');
     
     // Initial Data
     const initialUsers = [
@@ -414,7 +418,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (dropdownContent) {
             dropdownContent.innerHTML = ''; // Clear existing dropdown items
 
-            const availableUsers = users.filter(user => user.profile.description.trim() !== '');
+            const availableUsers = users.filter(user => user.role === 'student');
 
             availableUsers.forEach(user => {
                 const a = document.createElement('a');
@@ -425,6 +429,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
                 dropdownContent.appendChild(a);
             });
+
         }
     }
 
@@ -531,16 +536,45 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Function to make reservation (for technicians)
     function makeReservation() {
-        // Implement reservation logic for technicians here
+        const selectedStudentEmail = studentEmailDropdown.value;
+        const student = users.find(user => user.email === selectedStudentEmail);
+
+        if (student) {
+            const labId = prompt('Enter Lab ID:');
+            const date = prompt('Enter Date (YYYY-MM-DD):');
+            const time = prompt('Enter Time (HH:MM):');
+            const seatNumber = parseInt(prompt('Enter Seat Number:'));
+
+            if (labId && date && time && seatNumber) {
+                const reservation = {
+                    id: Date.now(),
+                    userId: student.id,
+                    labId: parseInt(labId),
+                    date,
+                    time,
+                    anonymous: false, // Technicians cannot make anonymous reservations for students
+                    seatNumber
+                };
+
+                reservations.push(reservation);
+                saveData();
+                alert('Reservation made successfully for ' + student.email);
+                window.location.href = 'profile.html';
+            } else {
+                alert('All fields are required to make a reservation.');
+            }
+        } else {
+            alert('Selected student not found.');
+        }
     }
 
     // Function to display technician-specific elements
     function displayTechnicianElements() {
         if (currentUser && currentUser.role === 'technician') {
             // Display technician-specific elements
-            const technicianDropdown = document.getElementById('technician-dropdown');
             if (technicianDropdown) {
                 technicianDropdown.style.display = 'block'; // Show technician dropdown
+                populateStudentEmailDropdown(); // Populate the dropdown with students' emails
             }
         }
     }
@@ -548,6 +582,22 @@ document.addEventListener('DOMContentLoaded', function () {
     const makeReservationButton = document.getElementById('make-reservation');
     if (makeReservationButton) {
         makeReservationButton.addEventListener('click', makeReservation);
+    }
+
+
+    //kian update 3.0
+    function populateStudentEmailDropdown() {
+        if (studentEmailDropdown) {
+            studentEmailDropdown.innerHTML = ''; // Clear existing options
+            
+            const students = users.filter(user => user.role === 'student');
+            students.forEach(student => {
+                const option = document.createElement('option');
+                option.value = student.email;
+                option.textContent = student.email;
+                studentEmailDropdown.appendChild(option);
+            });
+        }
     }
 
     //new new kian
