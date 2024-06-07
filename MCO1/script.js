@@ -88,17 +88,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Function to delete the user's account
     function deleteUserAccount() {
-        // Remove the user from the list of users
         users = users.filter(user => user.id !== currentUser.id);
-
-        // Cancel any reservations associated with the user
         reservations = reservations.filter(reservation => reservation.userId !== currentUser.id);
 
-        // Update local storage
         saveData();
 
         alert('Your account has been successfully deleted.');
-        window.location.href = 'index.html'; // Redirect to the homepage
+        window.location.href = 'index.html';
     }
 
     // Display Availability for Selected Lab
@@ -124,6 +120,126 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+<<<<<<< Updated upstream
+=======
+    // Load user reservations
+    function loadUserReservations() {
+        if (userReservations) {
+            userReservations.innerHTML = '';
+            const userReservationsList = reservations.filter(r => r.userId === currentUser.id);
+            userReservationsList.forEach(reservation => {
+                const li = document.createElement('li');
+                const labName = labs.find(l => l.id == reservation.labId).name;
+                li.innerHTML = `Lab: ${labName}, Seat: ${reservation.seatNumber}, Date: ${reservation.date}, Time: ${reservation.time} 
+                    <button id="remove-${reservation.id}">Remove reservation</button>`;
+                
+                userReservations.appendChild(li);
+
+                const removeButton = document.getElementById(`remove-${reservation.id}`);
+                removeButton.addEventListener('click', function () {
+                    removeReservation(reservation.id);
+                });
+            });
+        }
+    }
+
+    // Function to remove reservation within 10 minutes of the reservation time
+    function removeReservation(reservationId) {
+        const reservation = reservations.find(r => r.id === reservationId);
+        if (!reservation) return;
+
+        const reservationTime = new Date(`${reservation.date}T${reservation.time}:00`);
+        const currentTime = new Date();
+
+        const timeDifference = (reservationTime - currentTime) / (1000 * 60); // Difference in minutes
+
+        if (timeDifference <= 10 && timeDifference >= 0) {
+            reservations = reservations.filter(r => r.id !== reservationId);
+            saveData();
+            loadUserReservations();
+            alert('Reservation successfully removed.');
+        } else {
+            alert('Reservations can only be removed within 10 minutes of the reservation time.');
+        }
+    }
+
+    // Show the edit profile form when "Edit Profile" button is clicked
+    if (editProfileButton) {
+        editProfileButton.addEventListener('click', function () {
+            editProfileSection.style.display = 'block';
+        });
+    }
+
+    // Hide the edit profile form when "Cancel" button is clicked
+    if (cancelEditButton) {
+        cancelEditButton.addEventListener('click', function () {
+
+            editProfileSection.style.display = 'none';
+        });
+    }
+
+    /* When the user clicks on the button,
+    toggle between hiding and showing the dropdown content */
+    if (dropDownButton) {
+        dropDownButton.addEventListener('click', function () {
+            document.getElementById("myDropdown").classList.toggle("show");
+        });
+      }
+
+    // Close the dropdown if the user clicks outside of it
+    window.onclick = function(event) {
+        if (!event.target.matches('.dropbtn')) {
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            var i;
+            for (i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
+            }
+        }
+    }
+
+    // Handle form submission (for saving changes)
+    const editProfileForm = document.getElementById('edit-profile-form');
+    if (editProfileForm) {
+        editProfileForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            
+            const newProfilePictureInput = document.getElementById('new-profile-picture');
+            const newUserNameInput = document.getElementById('new-user-name');
+            const newUserDescriptionInput = document.getElementById('new-user-description');
+
+            // Update profile picture if a new one is provided
+            if (newProfilePictureInput.files.length > 0) {
+                const reader = new FileReader();
+                reader.onload = function (event) {
+                    currentUser.profile.picture = event.target.result;
+                    document.getElementById('profile-picture').src = event.target.result;
+                    saveData();
+                };
+                reader.readAsDataURL(newProfilePictureInput.files[0]);
+            }
+
+            // Update username if a new one is provided
+            if (newUserNameInput.value.trim() !== '') {
+                currentUser.email = newUserNameInput.value.trim();
+                document.getElementById('user-name').textContent = currentUser.email;
+            }
+
+            // Update description if a new one is provided
+            if (newUserDescriptionInput.value.trim() !== '') {
+                currentUser.profile.description = newUserDescriptionInput.value.trim();
+                document.getElementById('user-description').textContent = currentUser.profile.description;
+            }
+
+            saveData();
+            editProfileSection.style.display = 'none';  // Hide the form after saving
+        });
+    }
+
+    // Event Listeners for other forms
+>>>>>>> Stashed changes
     if (loginForm) {
         loginForm.addEventListener('submit', function (e) {
             e.preventDefault();
