@@ -21,7 +21,17 @@ document.addEventListener('DOMContentLoaded', function () {
     const labFormSelect = document.getElementById('lab');
     const deleteAccountButton = document.getElementById('delete-account');
 
-    // kian update 2.0
+  
+    //newly added elements by brian
+    const selectTimeSlotSelect = document.getElementById("lab-timeslot-select");
+    const checkAvailabilityBtn = document.getElementById("check-available-slots-btn");
+    const checkAvailableSection = document.getElementById("check-avalable-section");
+    const row1 = document.getElementById('lab-availability-dv1');
+    const row2 = document.getElementById('lab-availability-dv2');
+    const row3 = document.getElementById('lab-availability-dv3');
+
+
+    // newly added elements by kain
     const modal = document.getElementById('user-info-modal');
     const modalClose = document.querySelector('.modal .close');
     const modalProfilePicture = document.getElementById('modal-profile-picture');
@@ -30,10 +40,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const modalUserReservations = document.getElementById('modal-user-reservations');
     const submitEditButton = document.getElementById('submit-edit');
     const logoutButton = document.getElementById('logout-button');
-
-    // kian update 3.0
-    const studentEmailDropdown = document.getElementById('student-email-dropdown');
-    const technicianDropdown = document.getElementById('technician-dropdown');
     
     // Initial Data
     const initialUsers = [
@@ -43,15 +49,110 @@ document.addEventListener('DOMContentLoaded', function () {
     ];
 
     const initialReservations = [
-        { id: 1, userId: 1, labId: 1, date: '2024-06-01', time: '09:00', anonymous: false, seatNumber: 1 },
-        { id: 2, userId: 2, labId: 2, date: '2024-06-01', time: '10:00', anonymous: true, seatNumber: 2 }
+        { id: 1, userId: 1, labId: 1, date: '2024-06-11', time: '09:00', anonymous: false, seatNumber: 1 },
+        { id: 2, userId: 2, labId: 2, date: '2024-06-11', time: '10:30', anonymous: true, seatNumber: 2 },
+        { id: 3, userId: 1, labId: 1, date: '2024-06-11', time: '09:00', anonymous: false, seatNumber: 4 }
     ];
 
     const labs = [
-        { id: 1, name: 'Lab 1', seats: 10 },
-        { id: 2, name: 'Lab 2', seats: 8 },
-        { id: 3, name: 'Lab 3', seats: 12 }
+        // add an array reservations attribute -- automatically populate object + array
+        { id: 1, name: 'Lab 1', seats: 10, reservations: {} },
+        { id: 2, name: 'Lab 2', seats: 8, reservations: {} },
+        { id: 3, name: 'Lab 3', seats: 12, reservations: {} }
     ];
+
+    const timeslots = [
+        '09:00', '10:30', '12:00', '1:30', '3:00', '4:30'
+    ]
+
+    //reservations can only be made one week in advance
+    const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+
+
+    //populate weekly schedule for labs
+    function populateLabSchedule() {
+        labs.forEach((lab) => {
+            days.forEach((day) => {
+                lab.reservations[day] = []
+                timeslots.forEach((time) => {
+                    lab.reservations[day][time] = new Array(lab.seats)
+                })
+            })
+            console.log(lab)
+        })
+    }
+
+    //assign all reserved slots of timeslot of day
+    function setReserved() {
+        initialReservations.forEach((reservation) => {
+            var setDate = new Date(reservation.date)
+            var dayy = setDate.getDay()
+            labs[reservation.labId - 1].reservations[days[dayy - 1]][reservation.time][reservation.seatNumber - 1] = true
+        })
+    }
+
+    //check available slots
+    function checkAvailableSlots(day, time) {
+        var setDate = new Date(day)
+        var dayy = setDate.getDay()
+        labs.forEach((lab) => {
+            var labNum = lab.id
+            for (let i = 0; i < lab.seats; i++) {
+                var div = document.getElementById(`lab-availability-dv${labNum}`)
+                if (lab.reservations[days[dayy - 1]][time][i] != true) {
+                    let available = document.createElement('p');
+                    available.value = i;
+                    available.innerHTML = `seat ${i + 1}`;
+                    console.log(lab.id, `seat ${i + 1}`)
+                    switch (lab.id) {
+                        case 1:
+                            row1.append(available);
+                            break;
+                        case 2:
+                            row2.append(available);
+                            break;
+                        case 3:
+                            row3.append(available);
+                            break;
+                    }
+                }
+            }
+
+        })
+    }
+
+    //populate select for time in view reservation slots
+    function populateSelectLabSchedule() {
+        timeslots.map((time) => {
+            let option = document.createElement("option");
+            option.value = time; // the index
+            option.innerHTML = time;
+            selectTimeSlotSelect.append(option);
+        });
+    }
+
+    //populate the header element of the divs for viewing of slots
+    function populateAvailabilityDivs() {
+        var head1 = document.createElement('h4');
+        head1.innerHTML = ("Lab 1")
+        row1.append(head1)
+        var head2 = document.createElement('h4');
+        head2.innerHTML = ("Lab 2")
+        row2.append(head2)
+        var head3 = document.createElement('h4');
+        head3.innerHTML = ("Lab 3")
+        row3.append(head3)
+    }
+
+    //funtionality of check availability button
+    if (checkAvailabilityBtn) {
+        checkAvailabilityBtn.addEventListener("click", function () {
+            var time = document.getElementById("lab-timeslot-select")
+            var date = document.getElementById("lab-date-select")
+            populateAvailabilityDivs();
+            checkAvailableSlots(date.value, time.value)
+        })
+    }
 
     // Load Data from Local Storage or Initialize
     let users = JSON.parse(localStorage.getItem('users')) || initialUsers;
@@ -231,7 +332,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (editProfileForm) {
         editProfileForm.addEventListener('submit', function (e) {
             e.preventDefault();
-            
+
             const newProfilePictureInput = document.getElementById('new-profile-picture');
             const newUserNameInput = document.getElementById('new-user-name');
             const newUserDescriptionInput = document.getElementById('new-user-description');
@@ -381,7 +482,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Event listener for the delete account button
     if (deleteAccountButton) {
-        deleteAccountButton.addEventListener('click', function() {
+        deleteAccountButton.addEventListener('click', function () {
             // Show confirmation prompt
             const confirmDelete = confirm('Are you sure you want to delete your account? This action cannot be undone.');
 
@@ -394,6 +495,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Initial Data Load
     loadLabs();
+    populateLabSchedule();
+    setReserved();
+    populateSelectLabSchedule();
     if (labSelect) {
         displayAvailability(parseInt(labSelect.value));
     }
@@ -418,7 +522,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (dropdownContent) {
             dropdownContent.innerHTML = ''; // Clear existing dropdown items
 
-            const availableUsers = users.filter(user => user.role === 'student');
+            const availableUsers = users.filter(user => user.profile.description.trim() !== '');
 
             availableUsers.forEach(user => {
                 const a = document.createElement('a');
@@ -429,7 +533,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
                 dropdownContent.appendChild(a);
             });
-
         }
     }
 
@@ -536,45 +639,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Function to make reservation (for technicians)
     function makeReservation() {
-        const selectedStudentEmail = studentEmailDropdown.value;
-        const student = users.find(user => user.email === selectedStudentEmail);
-
-        if (student) {
-            const labId = prompt('Enter Lab ID:');
-            const date = prompt('Enter Date (YYYY-MM-DD):');
-            const time = prompt('Enter Time (HH:MM):');
-            const seatNumber = parseInt(prompt('Enter Seat Number:'));
-
-            if (labId && date && time && seatNumber) {
-                const reservation = {
-                    id: Date.now(),
-                    userId: student.id,
-                    labId: parseInt(labId),
-                    date,
-                    time,
-                    anonymous: false, // Technicians cannot make anonymous reservations for students
-                    seatNumber
-                };
-
-                reservations.push(reservation);
-                saveData();
-                alert('Reservation made successfully for ' + student.email);
-                window.location.href = 'profile.html';
-            } else {
-                alert('All fields are required to make a reservation.');
-            }
-        } else {
-            alert('Selected student not found.');
-        }
+        // Implement reservation logic for technicians here
     }
 
     // Function to display technician-specific elements
     function displayTechnicianElements() {
         if (currentUser && currentUser.role === 'technician') {
             // Display technician-specific elements
+            const technicianDropdown = document.getElementById('technician-dropdown');
             if (technicianDropdown) {
                 technicianDropdown.style.display = 'block'; // Show technician dropdown
-                populateStudentEmailDropdown(); // Populate the dropdown with students' emails
             }
         }
     }
@@ -582,22 +656,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const makeReservationButton = document.getElementById('make-reservation');
     if (makeReservationButton) {
         makeReservationButton.addEventListener('click', makeReservation);
-    }
-
-
-    //kian update 3.0
-    function populateStudentEmailDropdown() {
-        if (studentEmailDropdown) {
-            studentEmailDropdown.innerHTML = ''; // Clear existing options
-            
-            const students = users.filter(user => user.role === 'student');
-            students.forEach(student => {
-                const option = document.createElement('option');
-                option.value = student.email;
-                option.textContent = student.email;
-                studentEmailDropdown.appendChild(option);
-            });
-        }
     }
 
     //new new kian
