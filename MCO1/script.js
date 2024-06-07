@@ -29,12 +29,12 @@ document.addEventListener('DOMContentLoaded', function () {
     const modalUserDescription = document.getElementById('modal-user-description');
     const modalUserReservations = document.getElementById('modal-user-reservations');
     const submitEditButton = document.getElementById('submit-edit');
+    const logoutButton = document.getElementById('logout-button');
     
-
     // Initial Data
     const initialUsers = [
         { id: 1, email: 'student1@dlsu.edu', password: 'password1', role: 'student', profile: { picture: 'images/default-profile.png', description: 'Student 1' }, reservations: [] },
-        { id: 2, email: 'student2@dlsu.edu', password: 'password2', role: 'student', profile: { picture: 'images/default-profile.png', description: 'Student 2' }, reservations: [] },
+        { id: 2, email: 'student2@dlsu.edu', password: 'password2', role: 'student', profile: { picture: 'images/default-profile2.jpeg', description: 'Student 2' }, reservations: [] },
         { id: 3, email: 'technician1@dlsu.edu', password: 'password3', role: 'technician', profile: { picture: 'images/default-profile.png', description: 'Technician 1' }, reservations: [] }
     ];
 
@@ -62,6 +62,15 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // new new kian - I updated this segment, so the first instance will alawys have the seats options
+    // Logout Function
+    function logout() {
+        // Clear session-related data
+        localStorage.removeItem('currentUser');
+        currentUser = null;
+        // Redirect to the login page
+        window.location.href = 'login.html';
+    }
+
     // Load Labs into Select Element
     function loadLabs() {
         [labSelect, labFormSelect].forEach(selectElement => {
@@ -128,6 +137,53 @@ document.addEventListener('DOMContentLoaded', function () {
                 seatDiv.textContent = `Seat ${i}: ${seatReservations.length ? 'Reserved' : 'Available'}`;
                 availabilityDiv.appendChild(seatDiv);
             }
+        }
+    }
+
+    // Event Listeners
+    
+    if (logoutButton) {
+        logoutButton.addEventListener('click', function () {
+            logout();
+        });
+    }
+
+    function loadUserReservations() {
+        if (userReservations) {
+            userReservations.innerHTML = '';
+            const userReservationsList = reservations.filter(r => r.userId === currentUser.id);
+            userReservationsList.forEach(reservation => {
+                const li = document.createElement('li');
+                const labName = labs.find(l => l.id == reservation.labId).name;
+                li.innerHTML = `Lab: ${labName}, Seat: ${reservation.seatNumber}, Date: ${reservation.date}, Time: ${reservation.time} <button id="remove-${reservation.id}">Remove reservation</button>`;
+                
+                userReservations.appendChild(li);
+    
+                const removeButton = document.getElementById(`remove-${reservation.id}`);
+                removeButton.addEventListener('click', function () {
+                    removeReservation(reservation.id);
+                });
+            });
+        }
+    }
+
+        // Function to remove reservation within 10 minutes of the reservation time
+    function removeReservation(reservationId) {
+        const reservation = reservations.find(r => r.id === reservationId);
+        if (!reservation) return;
+
+        const reservationTime = new Date(`${reservation.date}T${reservation.time}:00`);
+        const currentTime = new Date();
+
+        const timeDifference = (reservationTime - currentTime) / (1000 * 60); // Difference in minutes
+
+        if (timeDifference <= 10 && timeDifference >= 0) {
+            reservations = reservations.filter(r => r.id !== reservationId);
+            saveData();
+            loadUserReservations();
+            alert('Reservation successfully removed.');
+        } else {
+            alert('Reservations can only be removed within 10 minutes of the reservation time.');
         }
     }
 
@@ -246,7 +302,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (users.find(u => u.email === email)) {
                 alert('User already exists');
             } else {
-                const newUser = { id: Date.now(), email, password, role, profile: { picture: 'images/default-profile.png', description: '' }, reservations: [] };
+                const newUser = { id: Date.now(), email, password, role, profile: { picture: 'images/default-profile.png', description: 'New user' }, reservations: [] };
                 users.push(newUser);
                 saveData();
                 alert('Registration successful');
@@ -295,7 +351,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Load current user data
     if (currentUser) {
         if (profilePicture) profilePicture.src = currentUser.profile.picture;
         if (userName) userName.textContent = currentUser.email;
@@ -331,6 +386,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 deleteUserAccount();
             }
         });
+    }
+
+    // Initial Data Load
+    loadLabs();
+    if (labSelect) {
+        displayAvailability(parseInt(labSelect.value));
+    }
+
+    if (currentUser) {
+        loadUserReservations();
     }
 
     // Save initial data if it doesn't exist

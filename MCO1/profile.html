@@ -12,19 +12,26 @@
         <nav>
             <a href="lab_availability.html">Lab Availability</a>
             <a href="reservation.html">Reserve</a>
-            <a href="logout.html">Logout</a>
+            <a href="#" id="logout-button">Logout</a>
         </nav>
     </header>
     <main>
         
         <!-- User's profile -->
         <section>
-            <img src="images/default-profile.png" alt="Profile Picture" id="profile-picture">
+            <img src="images/default-profile.jpeg" alt="Profile Picture" id="profile-picture">
             <h2 id="user-name">User Name</h2>
             <p id="user-description">User description...</p>
             <button id="edit-profile">Edit Profile</button>
         </section>
 
+        <section>
+            <h2>Your Reservations</h2>
+            <ul id="user-reservations">
+                <!-- Reservations will be populated by JavaScript -->
+            </ul>
+
+        </section>
         <!-- Edit Profile Section -->
         <section id="edit-profile-section" style="display:none;">
             <h2>Edit Profile</h2>
