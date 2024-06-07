@@ -128,6 +128,45 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    function loadUserReservations() {
+        if (userReservations) {
+            userReservations.innerHTML = '';
+            const userReservationsList = reservations.filter(r => r.userId === currentUser.id);
+            userReservationsList.forEach(reservation => {
+                const li = document.createElement('li');
+                const labName = labs.find(l => l.id == reservation.labId).name;
+                li.innerHTML = `Lab: ${labName}, Seat: ${reservation.seatNumber}, Date: ${reservation.date}, Time: ${reservation.time} <button id="remove-${reservation.id}">Remove reservation</button>`;
+                
+                userReservations.appendChild(li);
+    
+                const removeButton = document.getElementById(`remove-${reservation.id}`);
+                removeButton.addEventListener('click', function () {
+                    removeReservation(reservation.id);
+                });
+            });
+        }
+    }
+
+        // Function to remove reservation within 10 minutes of the reservation time
+    function removeReservation(reservationId) {
+        const reservation = reservations.find(r => r.id === reservationId);
+        if (!reservation) return;
+
+        const reservationTime = new Date(`${reservation.date}T${reservation.time}:00`);
+        const currentTime = new Date();
+
+        const timeDifference = (reservationTime - currentTime) / (1000 * 60); // Difference in minutes
+
+        if (timeDifference <= 10 && timeDifference >= 0) {
+            reservations = reservations.filter(r => r.id !== reservationId);
+            saveData();
+            loadUserReservations();
+            alert('Reservation successfully removed.');
+        } else {
+            alert('Reservations can only be removed within 10 minutes of the reservation time.');
+        }
+    }
+
     // Show the edit profile form when "Edit Profile" button is clicked
     if (editProfileButton) {
         editProfileButton.addEventListener('click', function () {
@@ -326,6 +365,10 @@ document.addEventListener('DOMContentLoaded', function () {
     loadLabs();
     if (labSelect) {
         displayAvailability(parseInt(labSelect.value));
+    }
+
+    if (currentUser) {
+        loadUserReservations();
     }
 
     // Save initial data if it doesn't exist
