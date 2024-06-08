@@ -132,16 +132,23 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     //populate the header element of the divs for viewing of slots
+    //temporary fix 
     function populateAvailabilityDivs() {
-        var head1 = document.createElement('h4');
-        head1.innerHTML = ("Lab 1")
-        row1.append(head1)
-        var head2 = document.createElement('h4');
-        head2.innerHTML = ("Lab 2")
-        row2.append(head2)
-        var head3 = document.createElement('h4');
-        head3.innerHTML = ("Lab 3")
-        row3.append(head3)
+        if (!row1.querySelector('h4')) {
+            var head1 = document.createElement('h4');
+            head1.innerHTML = "Lab 1";
+            row1.append(head1);
+        }
+        if (!row2.querySelector('h4')) {
+            var head2 = document.createElement('h4');
+            head2.innerHTML = "Lab 2";
+            row2.append(head2);
+        }
+        if (!row3.querySelector('h4')) {
+            var head3 = document.createElement('h4');
+            head3.innerHTML = "Lab 3";
+            row3.append(head3);
+        }
     }
 
     //funtionality of check availability button
@@ -149,6 +156,9 @@ document.addEventListener('DOMContentLoaded', function () {
         checkAvailabilityBtn.addEventListener("click", function () {
             var time = document.getElementById("lab-timeslot-select")
             var date = document.getElementById("lab-date-select")
+            row1.innerHTML = '';
+            row2.innerHTML = '';
+            row3.innerHTML = '';
             populateAvailabilityDivs();
             checkAvailableSlots(date.value, time.value)
         })
@@ -261,9 +271,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 const li = document.createElement('li');
                 const labName = labs.find(l => l.id == reservation.labId).name;
                 li.innerHTML = `Lab: ${labName}, Seat: ${reservation.seatNumber}, Date: ${reservation.date}, Time: ${reservation.time} <button id="remove-${reservation.id}">Remove reservation</button>`;
-                
                 userReservations.appendChild(li);
-    
+
                 const removeButton = document.getElementById(`remove-${reservation.id}`);
                 removeButton.addEventListener('click', function () {
                     removeReservation(reservation.id);
@@ -271,6 +280,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
     }
+
 
         // Function to remove reservation within 10 minutes of the reservation time
     function removeReservation(reservationId) {
@@ -498,6 +508,7 @@ document.addEventListener('DOMContentLoaded', function () {
     populateLabSchedule();
     setReserved();
     populateSelectLabSchedule();
+
     if (labSelect) {
         displayAvailability(parseInt(labSelect.value));
     }
