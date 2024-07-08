@@ -4,21 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
     <header>
         <h1>User Profile</h1>
         <nav>
-            <a href="lab_availability.html">Lab Availability</a>
-            <a href="reservation.html">Reserve</a>
-            <a href="#" id="logout-button">Logout</a>
+            <a href="/lab_availability">Lab Availability</a>
+            <a href="/reservation">Reserve</a>
+            <a href="/" id="logout-button">Logout</a>
         </nav>
     </header>
     <main>
         <!-- User's profile -->
         <section>
-            <img src="images/default-profile.jpeg" alt="Profile Picture" id="profile-picture">
+            <img src="/images/default-profile.jpeg" alt="Profile Picture" id="profile-picture">
             <h2 id="user-name">User Name</h2>
             <p id="user-description">User description...</p>
             <button id="edit-profile">Edit Profile</button>
@@ -57,6 +57,10 @@
             <ul id="user-reservations">
                 <!-- Reservations will be populated by JavaScript -->
             </ul>
+            <!-- Technician specific content -->
+            <div id="technician-dropdown" style="display:none;">
+                <button id="make-reservation" class="profile-button">Make Reservation</button>
+            </div>
         </section>
 
         <section>
@@ -83,6 +87,6 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script src="/js/script.js"></script>
 </body>
 </html>
