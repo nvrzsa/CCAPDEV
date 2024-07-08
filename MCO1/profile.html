@@ -16,22 +16,14 @@
         </nav>
     </header>
     <main>
+        <!-- User's profile -->
         <section>
-            <img src="images/default-profile.png" alt="Profile Picture" id="profile-picture">
+            <img src="images/default-profile.jpeg" alt="Profile Picture" id="profile-picture">
             <h2 id="user-name">User Name</h2>
             <p id="user-description">User description...</p>
             <button id="edit-profile">Edit Profile</button>
         </section>
 
-        <section>
-            <h2>Your Reservations</h2>
-            <ul id="user-reservations">
-                <!-- Reservations will be populated by JavaScript -->
-            </ul>
-<<<<<<< Updated upstream
-=======
-
-        </section>
         <!-- Edit Profile Section -->
         <section id="edit-profile-section" style="display:none;">
             <h2>Edit Profile</h2>
@@ -45,7 +37,7 @@
                 <label for="new-user-description">User Description:</label>
                 <input type="text" id="new-user-description" name="new-user-description">
                 
-                <button type="submit">Save Changes</button>
+                <button type="submit" id="submit-edit">Save Changes</button>
                 <button type="button" id="cancel-edit">Cancel</button>
             </form>
         </section>
@@ -54,14 +46,17 @@
         <section>
             <h2>Find Other Users</h2>
             <div class="dropdown">
-                <button id= "dropDown-Button" class="dropbtn">Search</button>
-                <div id="myDropdown" class="dropdown-content">
-                  <a href="home">Home</a>
-                  <a href="about">About</a>
-                  <a href="contact">Contact</a>
-                </div>
-              </div>
->>>>>>> Stashed changes
+                <button id="dropDown-Button" class="dropbtn">Dropdown</button>
+                <div id="myDropdown" class="dropdown-content"></div>
+            </div>
+        </section>
+
+        <!-- Reservations -->
+        <section>
+            <h2 id="reservations-title">Your Reservations</h2>
+            <ul id="user-reservations">
+                <!-- Reservations will be populated by JavaScript -->
+            </ul>
         </section>
 
         <section>
@@ -69,6 +64,25 @@
             <button id="delete-account" class="profile-button">Delete My Account</button>
         </section>
     </main>
+
+    <!-- User Info Modal -->
+    <div id="user-info-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <img src="" alt="Profile Picture" id="modal-profile-picture">
+            <section>
+                <h2 id="modal-user-name"></h2>
+            </section>
+            <p id="modal-user-description"></p>
+            <section>
+                <h2>Lab Reservations:</h2>
+            </section>
+            <ul id="modal-user-reservations">
+                <!-- User's reservations will be populated by JavaScript -->
+            </ul>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>
