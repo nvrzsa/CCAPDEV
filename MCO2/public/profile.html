@@ -47,8 +47,10 @@
             <h2>Find Other Users</h2>
             <div class="dropdown">
                 <button id="dropDown-Button" class="dropbtn">Dropdown</button>
-                <div id="myDropdown" class="dropdown-content"></div>
-            </div>
+                <div id="myDropdown" class="dropdown-content">
+                    <!-- User emails will be populated here -->
+                </div>
+            </div>            
         </section>
 
         <!-- Reservations -->
@@ -84,6 +86,18 @@
             <ul id="modal-user-reservations">
                 <!-- User's reservations will be populated by JavaScript -->
             </ul>
+        </div>
+    </div>
+
+    <!-- Modal Popup -->
+    <div id="userModal" class="modal">
+        <div class="modal-content">
+        <span class="close">&times;</span>
+        <img id="modal-profile-picture" src="" alt="Profile Picture">
+        <h2 id="modal-user-name"></h2>
+        <p id="modal-user-description"></p>
+        <h3>Lab Reservations:</h3>
+        <ul id="modal-user-reservations"></ul>
         </div>
     </div>
 
