@@ -44,6 +44,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const submitEditButton = document.getElementById('submit-edit');
 
     const technicianDropdownContent = document.getElementById('mytechnicianDropdown');
+    const technicianRemoveReservation = document.getElementById('myremovereservationDropdown');
     
     // Initial Data
     const initialUsers = [
@@ -88,6 +89,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     //--------------------------EDIT STARTED HERE-------------------------
     //populate users for profile (newly added 09/07/24)
+
+    //Populate users for searching users
     function populateUserDropdown() {
         if (dropdownContent) {
             dropdownContent.innerHTML = '';
@@ -103,6 +106,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    //Populate user dropdown to make reservation (technician side)
     function populateTechnicianDropdown() {
         if (technicianDropdownContent) {
             technicianDropdownContent.innerHTML = '';
@@ -117,6 +121,21 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    function populateTechnicianDropdownRemove() {
+        if (technicianRemoveReservation) {
+            technicianRemoveReservation.innerHTML = '';
+            const students = users.filter(user => user.role === 'student');
+            students.forEach(student => {
+                const a = document.createElement('a');
+                a.href = '#';
+                a.textContent = student.email;
+                a.addEventListener('click', () => removeReservationTech(student.email)); // Pass student email to makeReservation
+                technicianRemoveReservation.appendChild(a);
+            });
+        }
+    }
+
+    //Prompts to make reservations for the user
     function makeReservation(studentEmail) {
         const student = users.find(user => user.email === studentEmail);
     
@@ -148,17 +167,56 @@ document.addEventListener('DOMContentLoaded', function () {
             alert('Selected student not found.');
         }
     }
-    
 
+    //Remove reservation for user
+    function removeReservationTech(studentEmail) {
+        const student = users.find(user => user.email === studentEmail);
+    
+        if (student) {
+            const labId = prompt('Enter Lab ID:');
+            const date = prompt('Enter Date (YYYY-MM-DD):');
+    
+            if (labId && date) {
+                const reservationIndex = reservations.findIndex(reservation => 
+                    reservation.userId === student.id && 
+                    reservation.labId === parseInt(labId) && 
+                    reservation.date === date
+                );
+    
+                if (reservationIndex !== -1) {
+                    reservations.splice(reservationIndex, 1);
+                    saveData(); // Assuming you have a saveData() function to save reservations
+                    alert('Reservation removed successfully for ' + student.email);
+                    // Optionally, update the UI to reflect the removed reservation
+                } else {
+                    alert('No matching reservation found for the provided details.');
+                }
+            } else {
+                alert('Lab ID and Date are required to remove a reservation.');
+            }
+        } else {
+            alert('Selected student not found.');
+        }
+    }
+    
+    //Handles the displaying of the technician side
     function displayTechnicianElements() {
         if (currentUser && currentUser.role !== 'technician') {
             const technicianDropdown = document.getElementById('mytechnicianDropdown'); 
             const technicianContents = document.getElementById('technician-dropDown-Button'); 
             const technicianSection = document.getElementById('technician-section');
+
+            const technicianDropdownRemove = document.getElementById('myremovereservationDropdown'); 
+            const technicianContentsRemove = document.getElementById('remove-reservation-dropDown-Button'); 
+            const technicianSectionRemove = document.getElementById('remove-reservation-section');
             if (technicianDropdown) {
                 technicianDropdown.style.display = 'none'; // Hide technician dropdown for non-technicians
                 technicianContents.style.display = 'none'; // Hide technician dropdown for non-technicians
                 technicianSection.style.display = 'none'; // Hide technician section for non-technicians
+
+                technicianDropdownRemove.style.display = 'none'; // Hide technician dropdown for non-technicians
+                technicianContentsRemove.style.display = 'none'; // Hide technician dropdown for non-technicians
+                technicianSectionRemove.style.display = 'none'; // Hide technician section for non-technicians
             }
         }
     }
@@ -292,9 +350,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Call the function to populate the technician dropdown with student emails
     populateTechnicianDropdown();
+    // Call the function to populate the remove dropdown
+    populateTechnicianDropdownRemove();
+    // Shows the Technician side only
     displayTechnicianElements();
 
-    // Event listener for dropdown button
+    // Event listener for dropdown button of make reservation
     const techDropdown = document.getElementById('technician-dropDown-Button');
     if (techDropdown) {
         techDropdown.addEventListener('click', function() {
@@ -302,17 +363,12 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Close the dropdown when clicking outside of it
-    window.onclick = function(event) {
-        if (!event.target.matches('.dropbtn')) {
-            var techdropdowns = document.getElementsByClassName("tech-dropdown-content");
-            for (var i = 0; i < techdropdowns.length; i++) {
-                var techopenDropdown = techdropdowns[i];
-                if (techopenDropdown.classList.contains('show')) {
-                    techopenDropdown.classList.remove('show');
-                }
-            }
-        }
+    // Event listener for dropdown button of remove reservation
+    const techDropdownRemove = document.getElementById('remove-reservation-dropDown-Button');
+    if (techDropdownRemove) {
+        techDropdownRemove.addEventListener('click', function() {
+            document.getElementById('myremovereservationDropdown').classList.toggle('show');
+        });
     }
 
     // Event listener for dropdown button
@@ -414,7 +470,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 
-        // Function to remove reservation within 10 minutes of the reservation time
+    // Function to remove reservation within 10 minutes of the reservation time
     function removeReservation(reservationId) {
         const reservation = reservations.find(r => r.id === reservationId);
         if (!reservation) return;

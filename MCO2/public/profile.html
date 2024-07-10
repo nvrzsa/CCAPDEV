@@ -53,25 +53,39 @@
             </div>            
         </section>
 
-        <!-- Reservations -->
+        <!-- Your Reservations Section -->
         <section>
             <h2 id="reservations-title">Your Reservations</h2>
             <ul id="user-reservations">
                 <!-- Reservations will be populated by JavaScript -->
             </ul>
-            <div id="technician-section">
-                <h2>Make Reservation for Students</h2>
-                <div class="dropdown">
-                    <button id="technician-dropDown-Button" class="dropbtn">Make Reservation</button>
-                    <div id="mytechnicianDropdown" class="dropdown-content">
-                        <!-- Technician emails will be populated here -->
-                    </div>
-                </div>
-            </div>            
         </section>
 
+        <!-- Make Reservation for Students Section -->
+        <section id="technician-section">
+            <h2>Make Reservation for Students</h2>
+            <div class="dropdown">
+                <button id="technician-dropDown-Button" class="dropbtn">Make Reservation</button>
+                <div id="mytechnicianDropdown" class="dropdown-content">
+                    <!-- Technician emails will be populated here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Remove Reservation Section -->
+        <section id="remove-reservation-section">
+            <h2>Remove Reservation for Students</h2>
+            <div class="dropdown">
+                <button id="remove-reservation-dropDown-Button" class="dropbtn">Remove Reservation</button>
+                <div id="myremovereservationDropdown" class="dropdown-content">
+                    <!-- Reservation options will be populated here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Account Management -->
         <section>
-            <h3> Account Management </h3>
+            <h3>Account Management</h3>
             <button id="delete-account" class="profile-button">Delete My Account</button>
         </section>
     </main>
@@ -93,6 +107,7 @@
             </ul>
         </div>
     </div>
+
     <script src="./js/script.js"></script>
 </body>
 </html>
