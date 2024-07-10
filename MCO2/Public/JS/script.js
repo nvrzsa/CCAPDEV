@@ -32,6 +32,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // newly added elements by kain
     const logoutButton = document.getElementById('logout-button');
+    // 09/07/24
+    const dropdownContent = document.getElementById("myDropdown");
+
+    const modal = document.getElementById('user-info-modal');
+    const modalClose = document.querySelector('.modal .close');
+    const modalProfilePicture = document.getElementById('modal-profile-picture');
+    const modalUserName = document.getElementById('modal-user-name');
+    const modalUserDescription = document.getElementById('modal-user-description');
+    const modalUserReservations = document.getElementById('modal-user-reservations');
+    const submitEditButton = document.getElementById('submit-edit');
+
     
     // Initial Data
     const initialUsers = [
@@ -76,13 +87,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     //populate users for profile (newly added 09/07/24)
     function populateUserDropdown() {
-        const dropdownContent = document.getElementById('myDropdown');
         if (dropdownContent) {
             dropdownContent.innerHTML = '';
             users.forEach(user => {
                 const a = document.createElement('a');
                 a.href = '#';
                 a.textContent = user.email;
+                a.addEventListener('click', function () {
+                    showModal(user);
+                });
                 dropdownContent.appendChild(a);
             });
         }
@@ -562,4 +575,97 @@ document.addEventListener('DOMContentLoaded', function () {
             loadSeats(selectedLabId); // Load seats for the selected lab
         });
     }
+
+    //Information generator for the modal on profile (09/07/2024)
+    function populateUserInfo() {
+        if (currentUser) {
+            profilePicture.src = currentUser.profile.picture;
+            userName.textContent = currentUser.email;
+            userDescription.textContent = currentUser.profile.description;
+
+            // Display User's Reservations
+            userReservations.innerHTML = '';
+            const userReservationsList = reservations.filter(r => r.userId === currentUser.id);
+            userReservationsList.forEach(reservation => {
+                const li = document.createElement('li');
+                li.textContent = `Lab: ${labs.find(l => l.id == reservation.labId).name}, Seat: ${reservation.seatNumber}, Date: ${reservation.date}, Time: ${reservation.time}`;
+                userReservations.appendChild(li);
+            });
+        }
+    }
+
+    // Function to show modal with user information
+    function showModal(user) {
+        // Populate modal with user data
+        const modalProfilePicture = document.getElementById('modal-profile-picture');
+        const modalUserName = document.getElementById('modal-user-name');
+        const modalUserDescription = document.getElementById('modal-user-description');
+        const modalUserReservations = document.getElementById('modal-user-reservations');
+
+        modalProfilePicture.src = user.profile.picture;
+        modalUserName.textContent = user.email;
+        modalUserDescription.textContent = user.profile.description;
+
+        // Populate reservations
+        modalUserReservations.innerHTML = ''; // Clear existing reservations
+        const userReservationsList = reservations.filter(r => r.userId === user.id);
+        userReservationsList.forEach(reservation => {
+            const li = document.createElement('li');
+            li.textContent = `Lab: ${labs.find(l => l.id == reservation.labId).name}, Seat: ${reservation.seatNumber}, Date: ${reservation.date}, Time: ${reservation.time}`;
+            modalUserReservations.appendChild(li);
+        });
+
+        // Show the modal
+        const modal = document.getElementById('user-info-modal');
+        modal.style.display = 'block';
+
+        // Close the modal when the close button is clicked
+        const closeButton = document.querySelector('.modal-content .close');
+        closeButton.addEventListener('click', function() {
+            modal.style.display = 'none';
+        });
+
+        // Close the modal when clicking outside of it
+        window.addEventListener('click', function(event) {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+    }
+
+    // Event listener to close the modal
+    modalClose.addEventListener('click', function () {
+        modal.style.display = 'none';
+    });
+
+    // Close the modal when clicking outside of it
+    window.addEventListener('click', function (event) {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    });
+
+    // Add event listener to the dropdown button to toggle the dropdown content
+    if (dropDownButton) {
+        dropDownButton.addEventListener('click', function () {
+            const dropdownContent = document.getElementById('myDropdown');
+            dropdownContent.classList.toggle('show');
+        });
+    }
+
+    // Show modal only when user selects a user from the dropdown
+    function showModalOnSelect() {
+        const dropdownContent = document.getElementById('myDropdown');
+        dropdownContent.addEventListener('click', function(event) {
+            const selectedUser = event.target.textContent;
+            const user = users.find(u => u.email === selectedUser);
+            if (user) {
+                showModal(user);
+            }
+        });
+    }
+
+    populateUserInfo();
+    showModalOnSelect();
+
 });
