@@ -32,9 +32,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // newly added elements by kain
     const logoutButton = document.getElementById('logout-button');
+
     // 09/07/24
     const dropdownContent = document.getElementById("myDropdown");
-
     const modal = document.getElementById('user-info-modal');
     const modalClose = document.querySelector('.modal .close');
     const modalProfilePicture = document.getElementById('modal-profile-picture');
@@ -43,6 +43,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const modalUserReservations = document.getElementById('modal-user-reservations');
     const submitEditButton = document.getElementById('submit-edit');
 
+    const technicianDropdownContent = document.getElementById('mytechnicianDropdown');
     
     // Initial Data
     const initialUsers = [
@@ -85,6 +86,7 @@ document.addEventListener('DOMContentLoaded', function () {
         })
     }
 
+    //--------------------------EDIT STARTED HERE-------------------------
     //populate users for profile (newly added 09/07/24)
     function populateUserDropdown() {
         if (dropdownContent) {
@@ -100,6 +102,34 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
     }
+
+    function populateTechnicianDropdown() {
+        if (technicianDropdownContent) {
+            technicianDropdownContent.innerHTML = '';
+            const students = users.filter(user => user.role === 'student');
+            students.forEach(student => {
+                const a = document.createElement('a');
+                a.href = '#';
+                a.textContent = student.email;
+                technicianDropdownContent.appendChild(a);
+            });
+        }
+    }
+
+    function displayTechnicianElements() {
+        if (currentUser && currentUser.role !== 'technician') {
+            const technicianDropdown = document.getElementById('mytechnicianDropdown'); 
+            const technicianContents = document.getElementById('technician-dropDown-Button'); 
+            const technicianSection = document.getElementById('technician-section');
+            if (technicianDropdown) {
+                technicianDropdown.style.display = 'none'; // Hide technician dropdown for non-technicians
+                technicianContents.style.display = 'none'; // Hide technician dropdown for non-technicians
+                technicianSection.style.display = 'none'; // Hide technician section for non-technicians
+            }
+        }
+    }
+
+    //-----------------------------ENDED HERE---------------------------
     
     //assign all reserved slots of timeslot of day
     function setReserved() {
@@ -222,8 +252,34 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    //-----------------------------EDIT STARTED HERE------------------------
     // Populate user dropdown with emails (09/07/2024)
     populateUserDropdown();
+
+    // Call the function to populate the technician dropdown with student emails
+    populateTechnicianDropdown();
+    displayTechnicianElements();
+
+    // Event listener for dropdown button
+    const techDropdown = document.getElementById('technician-dropDown-Button');
+    if (techDropdown) {
+        techDropdown.addEventListener('click', function() {
+            document.getElementById('mytechnicianDropdown').classList.toggle('show');
+        });
+    }
+
+    // Close the dropdown when clicking outside of it
+    window.onclick = function(event) {
+        if (!event.target.matches('.dropbtn')) {
+            var techdropdowns = document.getElementsByClassName("tech-dropdown-content");
+            for (var i = 0; i < techdropdowns.length; i++) {
+                var techopenDropdown = techdropdowns[i];
+                if (techopenDropdown.classList.contains('show')) {
+                    techopenDropdown.classList.remove('show');
+                }
+            }
+        }
+    }
 
     // Event listener for dropdown button
     const dropDownButton = document.getElementById('dropDown-Button');
@@ -246,7 +302,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // new new kian -- added back the function
+    //--------------------------------EDIT ENDED HERE--------------------------
     loadLabs();
     
     if (labSelect) {
@@ -363,20 +419,6 @@ document.addEventListener('DOMContentLoaded', function () {
     // Attach the reset function to both cancel and submit buttons
     if (cancelEditButton) {
         cancelEditButton.addEventListener('click', resetProfileEditForm);
-    }
-
-    // Close the dropdown if the user clicks outside of it
-    window.onclick = function(event) {
-        if (!event.target.matches('.dropbtn')) {
-            var dropdowns = document.getElementsByClassName("dropdown-content");
-            var i;
-            for (i = 0; i < dropdowns.length; i++) {
-                var openDropdown = dropdowns[i];
-                if (openDropdown.classList.contains('show')) {
-                    openDropdown.classList.remove('show');
-                }
-            }
-        }
     }
 
     // Handle form submission (for saving changes)
@@ -576,6 +618,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    //----------------------------EDIT STARTED HERE--------------------------------------
     //Information generator for the modal on profile (09/07/2024)
     function populateUserInfo() {
         if (currentUser) {
@@ -645,14 +688,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Add event listener to the dropdown button to toggle the dropdown content
-    if (dropDownButton) {
-        dropDownButton.addEventListener('click', function () {
-            const dropdownContent = document.getElementById('myDropdown');
-            dropdownContent.classList.toggle('show');
-        });
-    }
-
     // Show modal only when user selects a user from the dropdown
     function showModalOnSelect() {
         const dropdownContent = document.getElementById('myDropdown');
@@ -667,5 +702,5 @@ document.addEventListener('DOMContentLoaded', function () {
 
     populateUserInfo();
     showModalOnSelect();
-
+    //------------------------------EDIT ENDED HERE-------------------------------
 });

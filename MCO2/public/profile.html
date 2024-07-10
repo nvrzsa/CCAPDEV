@@ -59,13 +59,15 @@
             <ul id="user-reservations">
                 <!-- Reservations will be populated by JavaScript -->
             </ul>
-            <!-- Technician specific content -->
-            <div id="technician-dropdown" style="display:none;">
-                <select id="student-email-dropdown">
-                    <!-- Student emails will be populated here by JavaScript -->
-                </select>
-                <button id="make-reservation" class="profile-button">Make Reservation</button>
-            </div>
+            <div id="technician-section">
+                <h2>Make Reservation for Students</h2>
+                <div class="dropdown">
+                    <button id="technician-dropDown-Button" class="dropbtn">Make Reservation</button>
+                    <div id="mytechnicianDropdown" class="dropdown-content">
+                        <!-- Technician emails will be populated here -->
+                    </div>
+                </div>
+            </div>            
         </section>
 
         <section>
