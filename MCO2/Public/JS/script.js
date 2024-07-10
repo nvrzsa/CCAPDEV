@@ -111,10 +111,44 @@ document.addEventListener('DOMContentLoaded', function () {
                 const a = document.createElement('a');
                 a.href = '#';
                 a.textContent = student.email;
+                a.addEventListener('click', () => makeReservation(student.email)); // Pass student email to makeReservation
                 technicianDropdownContent.appendChild(a);
             });
         }
     }
+
+    function makeReservation(studentEmail) {
+        const student = users.find(user => user.email === studentEmail);
+    
+        if (student) {
+            const labId = prompt('Enter Lab ID:');
+            const date = prompt('Enter Date (YYYY-MM-DD):');
+            const time = prompt('Enter Time (HH:MM):');
+            const seatNumber = parseInt(prompt('Enter Seat Number:'));
+    
+            if (labId && date && time && seatNumber) {
+                const reservation = {
+                    id: Date.now(),
+                    userId: student.id,
+                    labId: parseInt(labId),
+                    date,
+                    time,
+                    anonymous: false, // Technicians cannot make anonymous reservations for students
+                    seatNumber
+                };
+    
+                reservations.push(reservation);
+                saveData(); // Assuming you have a saveData() function to save reservations
+                alert('Reservation made successfully for ' + student.email);
+                // Optionally, redirect to profile page or update reservations list dynamically
+            } else {
+                alert('All fields are required to make a reservation.');
+            }
+        } else {
+            alert('Selected student not found.');
+        }
+    }
+    
 
     function displayTechnicianElements() {
         if (currentUser && currentUser.role !== 'technician') {
