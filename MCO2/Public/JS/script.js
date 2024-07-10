@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const editProfileButton = document.getElementById('edit-profile');
     const editProfileSection = document.getElementById('edit-profile-section');
     const cancelEditButton = document.getElementById('cancel-edit');
-    const dropDownButton = document.getElementById('dropDown-Button');
 
     // newly added elements by nathan
     const seatSelect = document.getElementById('seat');
@@ -32,6 +31,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     // newly added elements by kain
+    const logoutButton = document.getElementById('logout-button');
+
+    // 09/07/24
+    const dropdownContent = document.getElementById("myDropdown");
     const modal = document.getElementById('user-info-modal');
     const modalClose = document.querySelector('.modal .close');
     const modalProfilePicture = document.getElementById('modal-profile-picture');
@@ -39,7 +42,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const modalUserDescription = document.getElementById('modal-user-description');
     const modalUserReservations = document.getElementById('modal-user-reservations');
     const submitEditButton = document.getElementById('submit-edit');
-    const logoutButton = document.getElementById('logout-button');
+
+    const technicianDropdownContent = document.getElementById('mytechnicianDropdown');
+    const technicianRemoveReservation = document.getElementById('myremovereservationDropdown');
     
     // Initial Data
     const initialUsers = [
@@ -84,6 +89,142 @@ document.addEventListener('DOMContentLoaded', function () {
         })
     }
 
+    //--------------------------EDIT STARTED HERE-------------------------
+    //populate users for profile (newly added 09/07/24)
+
+    //Populate users for searching users
+    function populateUserDropdown() {
+        if (dropdownContent) {
+            dropdownContent.innerHTML = '';
+            users.forEach(user => {
+                const a = document.createElement('a');
+                a.href = '#';
+                a.textContent = user.email;
+                a.addEventListener('click', function () {
+                    showModal(user);
+                });
+                dropdownContent.appendChild(a);
+            });
+        }
+    }
+
+    //Populate user dropdown to make reservation (technician side)
+    function populateTechnicianDropdown() {
+        if (technicianDropdownContent) {
+            technicianDropdownContent.innerHTML = '';
+            const students = users.filter(user => user.role === 'student');
+            students.forEach(student => {
+                const a = document.createElement('a');
+                a.href = '#';
+                a.textContent = student.email;
+                a.addEventListener('click', () => makeReservation(student.email)); // Pass student email to makeReservation
+                technicianDropdownContent.appendChild(a);
+            });
+        }
+    }
+
+    function populateTechnicianDropdownRemove() {
+        if (technicianRemoveReservation) {
+            technicianRemoveReservation.innerHTML = '';
+            const students = users.filter(user => user.role === 'student');
+            students.forEach(student => {
+                const a = document.createElement('a');
+                a.href = '#';
+                a.textContent = student.email;
+                a.addEventListener('click', () => removeReservationTech(student.email)); // Pass student email to makeReservation
+                technicianRemoveReservation.appendChild(a);
+            });
+        }
+    }
+
+    //Prompts to make reservations for the user
+    function makeReservation(studentEmail) {
+        const student = users.find(user => user.email === studentEmail);
+    
+        if (student) {
+            const labId = prompt('Enter Lab ID:');
+            const date = prompt('Enter Date (YYYY-MM-DD):');
+            const time = prompt('Enter Time (HH:MM):');
+            const seatNumber = parseInt(prompt('Enter Seat Number:'));
+    
+            if (labId && date && time && seatNumber) {
+                const reservation = {
+                    id: Date.now(),
+                    userId: student.id,
+                    labId: parseInt(labId),
+                    date,
+                    time,
+                    anonymous: false, // Technicians cannot make anonymous reservations for students
+                    seatNumber
+                };
+    
+                reservations.push(reservation);
+                saveData(); // Assuming you have a saveData() function to save reservations
+                alert('Reservation made successfully for ' + student.email);
+                // Optionally, redirect to profile page or update reservations list dynamically
+            } else {
+                alert('All fields are required to make a reservation.');
+            }
+        } else {
+            alert('Selected student not found.');
+        }
+    }
+
+    //Remove reservation for user
+    function removeReservationTech(studentEmail) {
+        const student = users.find(user => user.email === studentEmail);
+    
+        if (student) {
+            const labId = prompt('Enter Lab ID:');
+            const date = prompt('Enter Date (YYYY-MM-DD):');
+    
+            if (labId && date) {
+                const reservationIndex = reservations.findIndex(reservation => 
+                    reservation.userId === student.id && 
+                    reservation.labId === parseInt(labId) && 
+                    reservation.date === date
+                );
+    
+                if (reservationIndex !== -1) {
+                    reservations.splice(reservationIndex, 1);
+                    saveData(); // Assuming you have a saveData() function to save reservations
+                    alert('Reservation removed successfully for ' + student.email);
+                    // Optionally, update the UI to reflect the removed reservation
+                } else {
+                    alert('No matching reservation found for the provided details.');
+                }
+            } else {
+                alert('Lab ID and Date are required to remove a reservation.');
+            }
+        } else {
+            alert('Selected student not found.');
+        }
+    }
+    
+    //Handles the displaying of the technician side
+    function displayTechnicianElements() {
+        if (currentUser && currentUser.role !== 'technician') {
+            const technicianDropdown = document.getElementById('mytechnicianDropdown'); 
+            const technicianContents = document.getElementById('technician-dropDown-Button'); 
+            const technicianSection = document.getElementById('technician-section');
+
+            const technicianDropdownRemove = document.getElementById('myremovereservationDropdown'); 
+            const technicianContentsRemove = document.getElementById('remove-reservation-dropDown-Button'); 
+            const technicianSectionRemove = document.getElementById('remove-reservation-section');
+            if (technicianDropdown) {
+                technicianDropdown.style.display = 'none'; // Hide technician dropdown for non-technicians
+                technicianContents.style.display = 'none'; // Hide technician dropdown for non-technicians
+                technicianSection.style.display = 'none'; // Hide technician section for non-technicians
+
+                technicianDropdownRemove.style.display = 'none'; // Hide technician dropdown for non-technicians
+                technicianContentsRemove.style.display = 'none'; // Hide technician dropdown for non-technicians
+                technicianSectionRemove.style.display = 'none'; // Hide technician section for non-technicians
+            }
+        }
+    }
+
+    //-----------------------------ENDED HERE---------------------------
+    
     //assign all reserved slots of timeslot of day
     function setReserved() {
         initialReservations.forEach((reservation) => {
@@ -178,7 +319,6 @@ document.addEventListener('DOMContentLoaded', function () {
         localStorage.setItem('currentUser', JSON.stringify(currentUser));
     }
 
-    // new new kian - I updated this segment, so the first instance will alawys have the seats options
     // Logout Function
     function logout() {
         // Clear session-related data
@@ -198,7 +338,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     option.value = lab.id;
                     option.textContent = lab.name;
                     selectElement.appendChild(option); 
-
+                    // Was populatedropdown here
                     loadSeats(lab.id);// this is what was
 
                 });
@@ -206,7 +346,55 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // new new kian -- added back the function
+    //-----------------------------EDIT STARTED HERE------------------------
+    // Populate user dropdown with emails (09/07/2024)
+    populateUserDropdown();
+
+    // Call the function to populate the technician dropdown with student emails
+    populateTechnicianDropdown();
+    // Call the function to populate the remove dropdown
+    populateTechnicianDropdownRemove();
+    // Shows the Technician side only
+    displayTechnicianElements();
+
+    // Event listener for dropdown button of make reservation
+    const techDropdown = document.getElementById('technician-dropDown-Button');
+    if (techDropdown) {
+        techDropdown.addEventListener('click', function() {
+            document.getElementById('mytechnicianDropdown').classList.toggle('show');
+        });
+    }
+
+    // Event listener for dropdown button of remove reservation
+    const techDropdownRemove = document.getElementById('remove-reservation-dropDown-Button');
+    if (techDropdownRemove) {
+        techDropdownRemove.addEventListener('click', function() {
+            document.getElementById('myremovereservationDropdown').classList.toggle('show');
+        });
+    }
+
+    // Event listener for dropdown button
+    const dropDownButton = document.getElementById('dropDown-Button');
+    if (dropDownButton) {
+        dropDownButton.addEventListener('click', function() {
+            document.getElementById('myDropdown').classList.toggle('show');
+        });
+    }
+
+    // Close the dropdown when clicking outside of it
+    window.onclick = function(event) {
+        if (!event.target.matches('.dropbtn')) {
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            for (var i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
+            }
+        }
+    }
+
+    //--------------------------------EDIT ENDED HERE--------------------------
     loadLabs();
     
     if (labSelect) {
@@ -284,7 +472,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 
-        // Function to remove reservation within 10 minutes of the reservation time
+    // Function to remove reservation within 10 minutes of the reservation time
     function removeReservation(reservationId) {
         const reservation = reservations.find(r => r.id === reservationId);
         if (!reservation) return;
@@ -323,20 +511,6 @@ document.addEventListener('DOMContentLoaded', function () {
     // Attach the reset function to both cancel and submit buttons
     if (cancelEditButton) {
         cancelEditButton.addEventListener('click', resetProfileEditForm);
-    }
-
-    // Close the dropdown if the user clicks outside of it
-    window.onclick = function(event) {
-        if (!event.target.matches('.dropbtn')) {
-            var dropdowns = document.getElementsByClassName("dropdown-content");
-            var i;
-            for (i = 0; i < dropdowns.length; i++) {
-                var openDropdown = dropdowns[i];
-                if (openDropdown.classList.contains('show')) {
-                    openDropdown.classList.remove('show');
-                }
-            }
-        }
     }
 
     // Handle form submission (for saving changes)
@@ -527,41 +701,17 @@ document.addEventListener('DOMContentLoaded', function () {
         localStorage.setItem('reservations', JSON.stringify(initialReservations));
     }
 
-    //new new add by kian -- added the showmodal (info of searched person)
-
-    // Function to populate dropdown with available user emails
-    function populateDropdown() {
-        const dropdownContent = document.getElementById('myDropdown');
-        if (dropdownContent) {
-            dropdownContent.innerHTML = ''; // Clear existing dropdown items
-
-            const availableUsers = users.filter(user => user.profile.description.trim() !== '');
-
-            availableUsers.forEach(user => {
-                const a = document.createElement('a');
-                a.href = '#';
-                a.textContent = user.email;
-                a.addEventListener('click', function () {
-                    showModal(user);
-                });
-                dropdownContent.appendChild(a);
-            });
-        }
-    }
-
-    populateDropdown();
-
     // Event listener for lab selection change, you can call populateDropdown here or as needed
     if (labSelect) {
         labSelect.addEventListener('change', function () {
             const selectedLabId = parseInt(labSelect.value);
             displayAvailability(selectedLabId);
             loadSeats(selectedLabId); // Load seats for the selected lab
-            populateDropdown(); // Update dropdown based on selected lab or any other criteria
         });
     }
 
-    // new new add by kian
+    //----------------------------EDIT STARTED HERE--------------------------------------
+    //Information generator for the modal on profile (09/07/2024)
     function populateUserInfo() {
         if (currentUser) {
             profilePicture.src = currentUser.profile.picture;
@@ -630,14 +780,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Add event listener to the dropdown button to toggle the dropdown content
-    if (dropDownButton) {
-        dropDownButton.addEventListener('click', function () {
-            const dropdownContent = document.getElementById('myDropdown');
-            dropdownContent.classList.toggle('show');
-        });
-    }
-
     // Show modal only when user selects a user from the dropdown
     function showModalOnSelect() {
         const dropdownContent = document.getElementById('myDropdown');
@@ -650,31 +792,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Function to make reservation (for technicians)
-    function makeReservation() {
-        // Implement reservation logic for technicians here
-    }
-
-    // Function to display technician-specific elements
-    function displayTechnicianElements() {
-        if (currentUser && currentUser.role === 'technician') {
-            // Display technician-specific elements
-            const technicianDropdown = document.getElementById('technician-dropdown');
-            if (technicianDropdown) {
-                technicianDropdown.style.display = 'block'; // Show technician dropdown
-            }
-        }
-    }
-
-    const makeReservationButton = document.getElementById('make-reservation');
-    if (makeReservationButton) {
-        makeReservationButton.addEventListener('click', makeReservation);
-    }
-
-    //new new kian
-    // Initial Data Load
-    displayTechnicianElements();
     populateUserInfo();
-    populateDropdown();
     showModalOnSelect();
+    //------------------------------EDIT ENDED HERE-------------------------------
 });
