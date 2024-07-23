@@ -323,7 +323,7 @@ document.addEventListener('DOMContentLoaded', function () {
         localStorage.removeItem('currentUser');
         currentUser = null;
         // Redirect to the login page
-        window.location.href = 'login.html';
+        window.location.href = '/login';
     }
 
     // Load Labs into Select Element
@@ -425,7 +425,7 @@ document.addEventListener('DOMContentLoaded', function () {
         saveData();
 
         alert('Your account has been successfully deleted.');
-        window.location.href = 'index.html'; // Redirect to the homepage
+        window.location.href = '/';
     }
 
     // Display Availability for Selected Lab
@@ -574,7 +574,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     currentUser.rememberUntil = new Date(new Date().getTime() + 3 * 7 * 24 * 60 * 60 * 1000);
                 }
                 saveData();
-                window.location.href = 'lab_availability.html';
+                window.location.href = '/lab_availability';
             } else {
                 alert('Invalid credentials');
             }
@@ -595,7 +595,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 users.push(newUser);
                 saveData();
                 alert('Registration successful');
-                window.location.href = 'login.html';
+                window.location.href = '/login';
             }
         });
     }
@@ -622,7 +622,7 @@ document.addEventListener('DOMContentLoaded', function () {
             reservations.push(reservation);
             saveData();
             alert('Reservation successful');
-            window.location.href = 'profile.html';
+            window.location.href = '/profile';
         });
     }
 

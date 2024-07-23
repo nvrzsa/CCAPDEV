@@ -1,0 +1,15 @@
+{{!-- Use the layout template we defined earlier --}}
+{{#> mainLayout title="Search Users"}}
+
+<main>
+    <form id="search-form">
+        <label for="search">Search by name:</label>
+        <input type="text" id="search" name="search" required>
+        <button type="submit">Search</button>
+    </form>
+    <ul id="search-results">
+        <!-- Search results will be populated by JavaScript -->
+    </ul>
+</main>
+
+{{/mainLayout}}
