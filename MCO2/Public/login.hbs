@@ -1,17 +1,19 @@
 {{!-- Use the layout template we defined earlier --}}
 {{#> mainLayout title="Login"}}
-
+{{!-- {{#if (messages.error)}}
+{{messages.error}}
+{{/if}} --}}
 <main>
-    <form id="login-form">
+    <form id="login-form" action="/login" method="post">
         <label for="email">Email:</label>
         <input type="email" id="email" name="email" required>
         
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" required>
         
-        <label for="remember">
+        {{!-- <label for="remember">
             <input type="checkbox" id="remember" name="remember"> Remember me
-        </label>
+        </label> --}}
         
         <button type="submit">Login</button>
     </form>

@@ -1,7 +1,14 @@
+if(process.env.NODE_ENV !== 'production'){
+    require('dotenv').config()
+}
 const express = require('express');
 const path = require('path');
 const exphbs = require('express-handlebars');
 const app = express();
+const passport = require('passport');
+const flash = require('express-flash');
+const session = require('express-session');
+const User = require('./server/models/user');
 const port = 3000;
 
 // Set up Handlebars view engine
@@ -15,43 +22,31 @@ app.set('views', path.join(__dirname, 'Public')); // Directory where view files 
 
 // Serve static files from the 'Public' directory
 app.use(express.static(path.join(__dirname, 'Public')));
+//
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(flash());
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+//connect database
+const connectDB = require('./server/config/db');
+connectDB();
+
+//init passport
+const initializePassport = require('./server/config/passport');
+const exp = require('constants');
+initializePassport(passport);
 
 // Define routes
-app.get('/', (req, res) => {
-    res.render('index', { title: 'Home' });
-});
+app.use('/', require('./server/routes/main'));
 
-app.get('/about', (req, res) => {
-    res.render('about', { title: 'About Us' });
-});
 
-app.get('/contact', (req, res) => {
-    res.render('contact', { title: 'Contact Us' });
-});
-
-app.get('/profile', (req, res) => {
-    res.render('profile', { title: 'User Profile' });
-});
-
-app.get('/lab_availability', (req, res) => {
-    res.render('lab_availability', { title: 'Lab Availability' });
-});
-
-app.get('/reservation', (req, res) => {
-    res.render('reservation', { title: 'Reserve a Slot' });
-});
-
-app.get('/users', (req, res) => {
-    res.render('users', { title: 'Search Users' });
-});
-
-app.get('/login', (req, res) => {
-    res.render('login', { title: 'Login' });
-});
-
-app.get('/register', (req, res) => {
-    res.render('register', { title: 'Register' });
-});
 
 // Start the server
 app.listen(port, () => {

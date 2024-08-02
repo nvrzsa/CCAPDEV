@@ -559,46 +559,46 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Event Listeners for other forms
-    if (loginForm) {
-        loginForm.addEventListener('submit', function (e) {
-            e.preventDefault();
-            const email = loginForm.email.value;
-            const password = loginForm.password.value;
-            const remember = loginForm.remember.checked;
+    // if (loginForm) {
+    //     loginForm.addEventListener('submit', function (e) {
+    //         e.preventDefault();
+    //         const email = loginForm.email.value;
+    //         const password = loginForm.password.value;
+    //         const remember = loginForm.remember.checked;
 
-            const user = users.find(u => u.email === email && u.password === password);
-            if (user) {
-                currentUser = user;
-                if (remember) {
-                    currentUser.remember = true;
-                    currentUser.rememberUntil = new Date(new Date().getTime() + 3 * 7 * 24 * 60 * 60 * 1000);
-                }
-                saveData();
-                window.location.href = '/lab_availability';
-            } else {
-                alert('Invalid credentials');
-            }
-        });
-    }
+    //         const user = users.find(u => u.email === email && u.password === password);
+    //         if (user) {
+    //             currentUser = user;
+    //             if (remember) {
+    //                 currentUser.remember = true;
+    //                 currentUser.rememberUntil = new Date(new Date().getTime() + 3 * 7 * 24 * 60 * 60 * 1000);
+    //             }
+    //             saveData();
+    //             window.location.href = '/lab_availability';
+    //         } else {
+    //             alert('Invalid credentials');
+    //         }
+    //     });
+    // }
 
-    if (registerForm) {
-        registerForm.addEventListener('submit', function (e) {
-            e.preventDefault();
-            const email = registerForm.email.value;
-            const password = registerForm.password.value;
-            const role = registerForm.role.value;
+    // if (registerForm) {
+    //     registerForm.addEventListener('submit', function (e) {
+    //         e.preventDefault();
+    //         const email = registerForm.email.value;
+    //         const password = registerForm.password.value;
+    //         const role = registerForm.role.value;
 
-            if (users.find(u => u.email === email)) {
-                alert('User already exists');
-            } else {
-                const newUser = { id: Date.now(), email, password, role, profile: { picture: 'images/default-profile.png', description: 'New user' }, reservations: [] };
-                users.push(newUser);
-                saveData();
-                alert('Registration successful');
-                window.location.href = '/login';
-            }
-        });
-    }
+    //         if (users.find(u => u.email === email)) {
+    //             alert('User already exists');
+    //         } else {
+    //             const newUser = { id: Date.now(), email, password, role, profile: { picture: 'images/default-profile.png', description: 'New user' }, reservations: [] };
+    //             users.push(newUser);
+    //             saveData();
+    //             alert('Registration successful');
+    //             window.location.href = '/login';
+    //         }
+    //     });
+    // }
 
     if (reservationForm) {
         reservationForm.addEventListener('submit', function (e) {
