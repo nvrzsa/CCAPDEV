@@ -26,8 +26,8 @@ router.get('/profile', checkAuthenticated, async (req, res) => {
     try{
         const id = req.user._id;
         const user = await User.findById(id);
-        console.log(user);
-        res.render('profile', { title: 'User Profile', user: user });
+        const reservations = await Reservation.find({userEmail: req.user.email})
+        res.render('profile', { title: 'User Profile', user: user, reservations: reservations });
     }
     catch(e){
         console.log(e);

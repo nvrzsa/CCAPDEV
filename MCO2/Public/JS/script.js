@@ -733,7 +733,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const modalProfilePicture = document.getElementById('modal-profile-picture');
         const modalUserName = document.getElementById('modal-user-name');
         const modalUserDescription = document.getElementById('modal-user-description');
-        const modalUserReservations = document.getElementById('modal-user-reservations');
+        // const modalUserReservations = document.getElementById('modal-user-reservations');
 
         modalProfilePicture.src = user.profile.picture;
         modalUserName.textContent = user.email;

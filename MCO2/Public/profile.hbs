@@ -39,7 +39,11 @@
     <section>
         <h2 id="reservations-title">Your Reservations</h2>
         <ul id="user-reservations">
-            <!-- Reservations will be populated by JavaScript -->
+            {{#each reservations}}
+            <li>{{date}} </li>
+            <li>{{time}} </li>
+            <li>{{seat}} </li>
+            {{/each}}
         </ul>
     </section>
 
