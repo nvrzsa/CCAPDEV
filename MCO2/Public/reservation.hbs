@@ -13,7 +13,7 @@
 
     <section>
         <h2>Reserve a Slot</h2>
-        <form id="reservation-form">
+        <form id="reservation-form" action="/reservation" method="post">
             <label for="lab">Lab:</label>
             <select id="lab" name="lab" required>
                 <!-- Options will be populated by JavaScript -->
@@ -30,9 +30,9 @@
             <label for="time">Time:</label>
             <input type="time" id="time" name="time" required>
             
-            <label for="anonymous">
+            {{!-- <label for="anonymous">
                 <input type="checkbox" id="anonymous" name="anonymous"> Reserve anonymously
-            </label>
+            </label> --}}
             
             <button type="submit">Reserve</button>
         </form>

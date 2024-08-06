@@ -600,31 +600,31 @@ document.addEventListener('DOMContentLoaded', function () {
     //     });
     // }
 
-    if (reservationForm) {
-        reservationForm.addEventListener('submit', function (e) {
-            e.preventDefault();
-            const labId = reservationForm.lab.value;
-            const date = reservationForm.date.value;
-            const time = reservationForm.time.value;
-            const anonymous = reservationForm.anonymous.checked;
-            const seatNumber = parseInt(document.getElementById('seat').value);
+    // if (reservationForm) {
+    //     reservationForm.addEventListener('submit', function (e) {
+    //         e.preventDefault();
+    //         const labId = reservationForm.lab.value;
+    //         const date = reservationForm.date.value;
+    //         const time = reservationForm.time.value;
+    //         const anonymous = reservationForm.anonymous.checked;
+    //         const seatNumber = parseInt(document.getElementById('seat').value);
 
-            const reservation = {
-                id: Date.now(),
-                userId: currentUser.id,
-                labId: parseInt(labId),
-                date,
-                time,
-                anonymous,
-                seatNumber: seatNumber // new new kian, fixed the seats
-            };
+    //         const reservation = {
+    //             id: Date.now(),
+    //             userId: currentUser.id,
+    //             labId: parseInt(labId),
+    //             date,
+    //             time,
+    //             anonymous,
+    //             seatNumber: seatNumber // new new kian, fixed the seats
+    //         };
 
-            reservations.push(reservation);
-            saveData();
-            alert('Reservation successful');
-            window.location.href = '/profile';
-        });
-    }
+    //         reservations.push(reservation);
+    //         saveData();
+    //         alert('Reservation successful');
+    //         window.location.href = '/profile';
+    //     });
+    // }
 
     if (searchForm) {
         searchForm.addEventListener('submit', function (e) {

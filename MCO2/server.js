@@ -1,6 +1,6 @@
-if(process.env.NODE_ENV !== 'production'){
-    require('dotenv').config()
-}
+// if(process.env.NODE_ENV !== 'production'){
+//     require('dotenv').config()
+// }
 const express = require('express');
 const path = require('path');
 const exphbs = require('express-handlebars');
@@ -15,7 +15,9 @@ const port = 3000;
 app.engine('hbs', exphbs.engine({ 
     extname: '.hbs', // Ensure the extension is prefixed with a dot
     defaultLayout: 'mainLayout', // Name of the default layout file
-    layoutsDir: path.join(__dirname, 'Public', 'layouts') // Directory where layout files are located
+    layoutsDir: path.join(__dirname, 'Public', 'layouts'), // Directory where layout files are located
+    runtimeOptions:{allowProtoPropertiesByDefault:true,
+    allowedProtoMethodsByDefault:true} 
 }));
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'Public')); // Directory where view files are located
@@ -27,7 +29,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(flash());
 app.use(session({
-    secret: process.env.SESSION_SECRET,
+    secret: "secret",
     resave: false,
     saveUninitialized: false,
 }));

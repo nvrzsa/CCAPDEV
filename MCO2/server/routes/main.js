@@ -3,11 +3,15 @@ const bcrypt = require('bcrypt');
 const router = express.Router();
 const path = require('path');
 const User = require('../models/user');
+const Reservation = require('../models/reservation');
 const passport = require('passport');
 
 router.get('/', (req, res) => {
-    var name = 'brian';
-    res.render('index', { name, title: 'Home' });
+    if(req.user !== undefined){
+        res.render('index', { title: 'Home', name: req.user.email });        
+    }
+    console.log(req.user)
+    res.render('index', { title: 'Home' });
 });
 
 router.get('/about', (req, res) => {
@@ -18,39 +22,68 @@ router.get('/contact', (req, res) => {
     res.render('contact', { title: 'Contact Us' });
 });
 
-router.get('/profile', (req, res) => {
-    res.render('profile', { title: 'User Profile' });
+router.get('/profile', checkAuthenticated, async (req, res) => {
+    try{
+        const id = req.user._id;
+        const user = await User.findById(id);
+        console.log(user);
+        res.render('profile', { title: 'User Profile', user: user });
+    }
+    catch(e){
+        console.log(e);
+    }
+    
 });
 
 router.get('/lab_availability', (req, res) => {
     res.render('lab_availability', { title: 'Lab Availability' });
 });
 
-router.get('/reservation', (req, res) => {
+
+router.get('/reservation', checkAuthenticated, (req, res) => {
     res.render('reservation', { title: 'Reserve a Slot' });
 });
 
-router.get('/users', (req, res) => {
+router.post('/reservation', checkAuthenticated, async (req, res) => {
+    const userEmail = req.user.email;
+    const lab = req.body.lab;
+    const seat = req.body.seat;
+    const date = req.body.date;
+    const time = req.body.time;
+    try{
+        //add to reservations
+        Reservation.create({userEmail: userEmail, lab: lab, seat: seat, date: date, time: time})
+        .then(res.redirect('/'));
+        //add to user reservations -- can just query instead to avoid double storage
+        // User.findByIdAndUpdate({_id: req.user._id},
+        //     {$push: {reservations: {userEmail: userEmail, lab: lab, seat: seat, date: date, time: time}}}
+        // )
+    } catch(error){
+        console.log(error);
+        res.redirect('/reservation')
+    }
+});
+
+
+router.get('/users', checkAuthenticated, (req, res) => {
     res.render('users', { title: 'Search Users' });
 });
 
-router.get('/login', (req, res) => {
+router.get('/login', checkNotAuthenticated, (req, res) => {
     res.render('login', { title: 'Login' });
 });
 
-router.post('/login', passport.authenticate('local', {
+router.post('/login', checkNotAuthenticated, passport.authenticate('local', {
     successRedirect: '/',
     failureRedirect: '/login',
     failureFlash: true
-}),  (req, res) =>{
-    res.redirect('/');
-});
+}));
 
-router.get('/register', (req, res) => {
+router.get('/register', checkNotAuthenticated, (req, res) => {
     res.render('register', { title: 'Register' });
 });
 
-router.post('/register', async (req, res) => {
+router.post('/register',checkNotAuthenticated, async (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
     const role = req.body.role;
@@ -70,4 +103,19 @@ router.post('/register', async (req, res) => {
 //     //make 404 hbs
 //     res.status(404).render('404', {title: '404'})
 // })
+
+function checkAuthenticated(req, res, next){
+    if (req.isAuthenticated()){
+        return next()
+    }
+
+    res.redirect('/login')
+}
+
+function checkNotAuthenticated(req, res, next){
+    if (req.isAuthenticated()){
+        return res.redirect('/')
+    }
+    next()
+}
 module.exports = router;

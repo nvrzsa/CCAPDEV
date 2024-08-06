@@ -1,8 +1,8 @@
 {{!-- Use the layout template we defined earlier --}}
 {{#> mainLayout title="Login"}}
-{{!-- {{#if (messages.error)}}
+{{#if messages.error}}
 {{messages.error}}
-{{/if}} --}}
+{{/if}}
 <main>
     <form id="login-form" action="/login" method="post">
         <label for="email">Email:</label>
